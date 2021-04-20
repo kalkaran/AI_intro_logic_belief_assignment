@@ -27,5 +27,7 @@ cover/
 __pycache__/
 *.py[cod]
 *$py.class
-.vscode
-.idea
+
+# other
+.vscode/
+.idea/
