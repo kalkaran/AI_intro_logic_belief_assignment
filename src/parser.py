@@ -1,63 +1,86 @@
 from typing import List
-from pyparsing import *
-from logic import Atom, And, Or
+import pyparsing as p
+from logic import Atom, And, Or, Implies, BiConditional, Not, Sentence
 from typing import List
-from pprint import pprint
-
-# example = '(A & B) V ((C & D) V E)'
-# term = Word(alphas)
-# AND = Keyword("&")
-# OR = Keyword("V")
-# expression = infixNotation(term, [(AND, 2, opAssoc.LEFT), (OR, 2, opAssoc.LEFT), ])
-# parsed_statement = expression.parseString(example)
-# print(parsed_statement)
-
-
-example = '(A & B) V ((C & D) V E)'
-example1 = 'A & B'
-example2 = 'A'
-term = Word(alphas)
-
-
-AND = Keyword("&")
-OR = Keyword("V")
-# NOT = Keyword("¬")
-
-expression = infixNotation(term, [
-    (AND, 2, opAssoc.LEFT),
-    (OR, 2, opAssoc.LEFT),
-    # (NOT, 1, opAssoc.RIGHT),
-    ])
-
-parsed_statement = expression.parseString(example)
-
 
 class Parser:
 
-    def build_ast(self, expr):
+    def __init__(self, input_string) -> None:
+        self.input_string = input_string
+
+        self.ATOM = p.Word(p.alphas)
+        self.AND_TOKEN = p.Keyword("&")
+        self.OR_TOKEN = p.Keyword("|")
+        self.NOT_TOKEN = p.Keyword("!")
+        self.IMPLIES_TOKEN = p.Keyword("=>")
+        self.BICOND_TOKEN = p.Keyword("<=>")
+
+        self.BIN_OP = 3
+        self.UNARY_OP = 2
+
+        self.expression = p.infixNotation(
+            self.ATOM,
+                [ (self.NOT_TOKEN, 1, p.opAssoc.RIGHT)
+                , (self.AND_TOKEN, 2, p.opAssoc.LEFT)
+                , (self.OR_TOKEN,  2, p.opAssoc.LEFT)
+                , (self.IMPLIES_TOKEN, 2, p.opAssoc.RIGHT)
+                , (self.BICOND_TOKEN, 2, p.opAssoc.RIGHT)
+                ]
+            )
+
+        self.operators = { '&' : And
+                         , '|' : Or
+                         , '=>': Implies
+                         , '<=>': BiConditional
+                         , '!' : Not }
+
+
+    def parse(self):
+        parsed_statement = self.expression.parseString(self.input_string)
+        return self.build_ast(parsed_statement.asList()[0])
+
+
+    def build_ast(self, expr : List) -> Sentence:
+        """ This function builds an abstract syntax tree from the parsed input.
+
+            Parameters:
+                    expr List: A ParseResult from pyparsing.parseString
+                               converted to a list of lists.
+
+            Returns:
+                    ast (Sentence): The corresponding abstract syntax tree (ast) of the parsed
+                                      input.
+        """
         if not isinstance(expr, List):
             return Atom(expr)
         elif isinstance(expr, List):
-            left_tree, op, right_tree = expr
-            if op == '&':
-                conjunction = And(self.build_ast(left_tree), self.build_ast(right_tree))
-                return conjunction
-
-            if op == 'V':
-                disjunction = Or(self.build_ast(left_tree), self.build_ast(right_tree))
-                return disjunction
-
-    def print_exp(self):
-        print("FINAL ANSWER")
-        pprint(self.parsed_expression)
+            if len(expr) == self.BIN_OP:
+                left_tree, op, right_tree = expr
+                connective = self.operators[op]
+                return connective(self.build_ast(left_tree), self.build_ast(right_tree))
+            elif len(expr) == self.UNARY_OP:
+                op, right_tree = expr
+                connective = self.operators[op]
+                return connective(self.build_ast(right_tree))
 
 
-p = Parser()
-result = p.build_ast([['A', '&', 'B'], 'V', ['A', 'V', 'B']])
-result1 = p.build_ast([['A', 'V', 'B'], 'V', [['C', '&', 'D'], 'V', 'E']])
-result2 = p.build_ast(parsed_statement.asList()[0])
 
+example0 = '!(A & B) | ((C & D) | E)'
+example1 = 'A & !(B)'
+example2 = '!(A)'
+example3 = 'A'
+example4 = 'A => B'
+example5 = 'A <=> B'
+example6 = '(A <=> B) => (B <=> A) & A | B'
 
-print(result)
-print(result1)
-print(result2)
+examples = [ example0
+           , example1
+           , example2
+           , example3
+           , example4
+           , example5
+           , example6 ]
+
+for example in examples:
+    parser = Parser(example)
+    print(f"{example} is parsed as:", parser.parse())

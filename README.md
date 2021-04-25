@@ -3,7 +3,7 @@
 
 ## Software requirements
 
-The `requirements.txt` file lists all Python libraries that project depends on, and they can be installed using
+The `requirements.txt` file lists all Python libraries that the project depends on, and they can be installed using
 
     pip install -r requirements.txt
 
