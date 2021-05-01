@@ -1,7 +1,7 @@
 from abc import ABC
+import sympy
 
 from typing import Dict
-
 
 class Sentence(ABC):
     def evaluate(self, model : Dict[str, bool]) -> bool:
@@ -18,7 +18,7 @@ class Atom(Sentence):
         self.name = name
 
     def __repr__(self) -> str:
-        return str(self.name)
+        return self.name
 
     def evaluate(self, model: Dict[str, bool]) -> bool:
         assert self.name in model, f"The {self.name} is not in model"
@@ -26,7 +26,7 @@ class Atom(Sentence):
         return model.get(self.name)
 
     def formula(self) -> str:
-        return self.__repr__()
+        return self.name
 
 
 class Not(Sentence):
@@ -42,7 +42,8 @@ class Not(Sentence):
         return not self.operand.evaluate(model)
 
     def formula(self) -> str:
-        return self.__repr__()
+        return f"~({self.operand.formula()})"
+
 
 
 class And(Sentence):
@@ -50,14 +51,15 @@ class And(Sentence):
         self.left = left
         self.right = right
 
-    def __repr__(self) -> str:
-        return f"({self.left.__repr__()} ∧ {self.right.__repr__()})"
 
     def evaluate(self, model: Dict[str, bool]) -> bool:
         return self.left.evaluate(model) and self.right.evaluate(model)
 
     def formula(self) -> str:
-        return self.__repr__()
+        return f"({self.left.formula()} & {self.right.formula()})"
+
+    def __repr__(self) -> str:
+        return f"({self.left.__repr__()} ∧ {self.right.__repr__()})"
 
 
 class Or(Sentence):
@@ -69,7 +71,7 @@ class Or(Sentence):
         return self.left.evaluate(model) or self.right.evaluate(model)
 
     def formula(self) -> str:
-        return self.__repr__()
+        return f"({self.left.formula()} | {self.right.formula()})"
 
     def __repr__(self) -> str:
         return f"({self.left.__repr__()} ∨ {self.right.__repr__()})"
@@ -85,7 +87,7 @@ class Implies(Sentence):
         return (not self.left.evaluate(model)) or self.right.evaluate(model)
 
     def formula(self) -> str:
-        return self.__repr__()
+        return f"(~{self.left.formula()} | {self.right.formula()})"
 
     def __repr__(self) -> str:
         return f"({self.left.__repr__()} => {self.right.__repr__()})"
@@ -100,7 +102,11 @@ class BiConditional(Sentence):
         return ((not self.left.evaluate(model)) or self.right.evaluate(model)) and ((not self.right.evaluate(model)) or self.left.evaluate(model))
 
     def formula(self) -> str:
-        return self.__repr__()
+        return f"(~{self.left.formula()} | {self.right.formula()}) & (~{self.right.formula()} | {self.left.formula()})"
 
     def __repr__(self) -> str:
         return f"({self.left.__repr__()} <=> {self.right.__repr__()})"
+
+
+def convert_to_cnf(sentence : str) -> str:
+    return sympy.logic.boolalg.to_cnf(sentence, True, True)

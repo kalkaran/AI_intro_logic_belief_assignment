@@ -11,7 +11,7 @@ class Parser:
         self.ATOM = p.Word(p.alphas)
         self.AND_TOKEN = p.Keyword("&")
         self.OR_TOKEN = p.Keyword("|")
-        self.NOT_TOKEN = p.Keyword("!")
+        self.NOT_TOKEN = p.Keyword("~")
         self.IMPLIES_TOKEN = p.Keyword("=>")
         self.BICOND_TOKEN = p.Keyword("<=>")
 
@@ -32,10 +32,10 @@ class Parser:
                          , '|' : Or
                          , '=>': Implies
                          , '<=>': BiConditional
-                         , '!' : Not }
+                         , '~' : Not }
 
 
-    def parse(self):
+    def parse(self) -> Sentence:
         parsed_statement = self.expression.parseString(self.input_string)
         return self.build_ast(parsed_statement.asList()[0])
 
@@ -44,7 +44,7 @@ class Parser:
         """ This function builds an abstract syntax tree from the parsed input.
 
             Parameters:
-                    expr List: A ParseResult from pyparsing.parseString
+                    expr (List): A ParseResult from pyparsing.parseString
                                converted to a list of lists.
 
             Returns:
@@ -65,9 +65,9 @@ class Parser:
 
 
 
-example0 = '!(A & B) | ((C & D) | E)'
-example1 = 'A & !(B)'
-example2 = '!(A)'
+example0 = '~(A & B) | ((C & D) | E)'
+example1 = 'A & ~(B)'
+example2 = '~(A)'
 example3 = 'A'
 example4 = 'A => B'
 example5 = 'A <=> B'
