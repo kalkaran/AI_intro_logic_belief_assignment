@@ -1,6 +1,6 @@
 from typing import List
 import pyparsing as p
-from logic import Atom, And, Or, Implies, BiConditional, Not, Sentence
+from src.logic import Atom, And, Or, Implies, BiConditional, Not, Sentence
 from typing import List
 
 class Parser:
@@ -83,4 +83,4 @@ examples = [ example0
 
 for example in examples:
     parser = Parser(example)
-    print(f"{example} is parsed as:", parser.parse())
+    #print(f"{example} is parsed as:", parser.parse())

@@ -1,6 +1,7 @@
 from abc import ABC
-import sympy
 
+import sympy
+from sympy.logic.boolalg import to_cnf
 from typing import Dict
 
 class Sentence(ABC):
@@ -109,4 +110,4 @@ class BiConditional(Sentence):
 
 
 def convert_to_cnf(sentence : str) -> str:
-    return sympy.logic.boolalg.to_cnf(sentence, True, True)
+    return to_cnf(sentence, True)
