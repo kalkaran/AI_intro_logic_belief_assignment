@@ -7,6 +7,7 @@ class Controller:
     def __init__(self):
         self.model ={"B" : True, "A" : True, "C" : True }
         self.sentence = None
+        self.beliefBase = None
 
     def declareNewBeliefBase(self):
         # Test string (A <=> B) => (B <=> A) & A | B & ~C
@@ -15,6 +16,8 @@ class Controller:
         # Validate input string
         parser = Parser(belief_base_input)
         self.sentence = parser.parse()
+        self.beliefBase = BeliefBase(convert_to_cnf(self.sentence.formula()))
+
         self.printCurrentBeliefBase()
 
     def declareRandowBeliefBase(self):
@@ -67,7 +70,7 @@ class Controller:
         if self.sentence is None:
             print("Current belief base is None.")
         else:
-            self.printCNF()
+            self.beliefBase.print_belief_base()
 
 
 

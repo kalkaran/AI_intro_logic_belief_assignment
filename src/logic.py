@@ -2,6 +2,7 @@ from abc import ABC
 
 import sympy
 from sympy.logic.boolalg import to_cnf
+from sympy.core.symbol import Symbol
 from sympy.logic.inference import satisfiable
 from typing import Dict
 
@@ -13,6 +14,19 @@ class Sentence(ABC):
     def formula(self) -> str:
         """ returns a string representation of a given sentence """
         pass
+
+class BeliefBase():
+
+    beliefs = []
+
+    def __init__(self, CNF:Symbol):
+        print("test")
+
+
+    def print_belief_base(self):
+        print(self.beliefs)
+
+
 
 
 
