@@ -2,12 +2,23 @@ from typing import List
 import pyparsing as p
 from src.logic import Atom, And, Or, Implies, BiConditional, Not, Sentence
 from typing import List
-from main import try_except
+#from main import try_except
+import functools
+
+
+def try_except(f):
+    @functools.wraps(f)
+    def inner(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception as ex:
+            print(f.__name__)
+            print(ex)
+    return inner
 
 
 
 class Parser:
-    @try_except
     def __init__(self, input_string) -> None:
         self.input_string = input_string
 

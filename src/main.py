@@ -97,17 +97,6 @@ class Controller:
         switcher.get(i, lambda : print("Invalid input"))()
 
 
-def try_except(f):
-    @functools.wraps(f)
-    def inner(*args, **kwargs):
-        try:
-            return f(*args, **kwargs)
-        except Exception as ex:
-            print(f.__name__)
-            print(ex)
-    return inner
-
-
 
 
 def main():
