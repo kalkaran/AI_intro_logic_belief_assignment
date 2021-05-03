@@ -1,7 +1,8 @@
 from src.logic import *
 from src.parser import Parser
 
-example0 = '~(A & B) | ((C & D) | E)'
+#example0 = '~(A & B) | ((C & D) | E)'
+example0 = 'A'
 example1 = 'A & ~(B)'
 example2 = '~(A)'
 example3 = 'A'
@@ -25,8 +26,8 @@ def printValidSyntax():
         parser = Parser(example)
         sentence = parser.parse()
         print(f"{example} is parsed as:", sentence)
-        print(sentence.formula())
-        print(convert_to_cnf(sentence.formula()))
+        print(f" Sentence formula : {sentence.formula()}")
+        print(f" CNF Form : {convert_to_cnf(sentence.formula())}")
 
         #print(sentence.evaluate(model))
 
