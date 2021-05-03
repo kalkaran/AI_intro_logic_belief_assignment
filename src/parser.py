@@ -42,11 +42,11 @@ class Parser:
                 ]
             )
 
-        self.operators = { '&' : And
-                         , '|' : Or
+        self.operators = {'&': And
+                         , '|': Or
                          , '=>': Implies
                          , '<=>': BiConditional
-                         , '~' : Not }
+                         , '~': Not}
 
     @try_except
     def parse(self) -> Sentence:

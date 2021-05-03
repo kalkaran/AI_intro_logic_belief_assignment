@@ -86,15 +86,15 @@ class Controller:
     def preformAction(self, i):
         print("\n--- Actions information ---\n")
         switcher={
-                1 : self.printGeneralInformation,
-                2 : self.printSyntaxInformation,
-                3 : self.printCurrentBeliefBase,
-                4 : self.declareNewBeliefBase,
-                5 : self.declareRandowBeliefBase,
-                6 : self.addNewBeliefToBeliefBase,
+                1: self.printGeneralInformation,
+                2: self.printSyntaxInformation,
+                3: self.printCurrentBeliefBase,
+                4: self.declareNewBeliefBase,
+                5: self.declareRandowBeliefBase,
+                6: self.addNewBeliefToBeliefBase,
                 7: self.check_satisfiability,
                 }
-        switcher.get(i, lambda : print("Invalid input"))()
+        switcher.get(i, lambda: print("Invalid input"))()
 
 
 

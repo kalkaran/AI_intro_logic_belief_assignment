@@ -1,11 +1,12 @@
 from src.logic import *
 from src.parser import Parser
 
-#example0 = '~(A & B) | ((C & D) | E)'
-example0 = 'A'
+example0 = '~(A & B) | ((C & D))'
+example0 = '~(A & B) | ((C & D) | E)'# <- this doesn't work @Ayman looks like only 4 letters allowed :/
+example0 = '~(A & B) | ((C & D) | A)'
 example1 = 'A & ~(B)'
 example2 = '~(A)'
-example3 = 'A'
+example3 = 'A & A & A'
 example4 = 'A => B'
 example5 = 'A <=> B'
 example6 = '(A <=> B) => (B <=> A) & A | B'
