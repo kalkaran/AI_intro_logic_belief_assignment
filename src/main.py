@@ -18,7 +18,6 @@ class Controller:
         parser = Parser(belief_base_input)
         self.sentence = parser.parse()
         self.beliefBase = BeliefBase(convert_to_cnf(self.sentence.formula()))
-
         self.printCurrentBeliefBase()
 
     def declareRandowBeliefBase(self):
@@ -37,9 +36,9 @@ class Controller:
             print("Current belief base is None.")
         else:
             tempBelief = input()
-            print(tempBelief)
-
-            # Implement stuff
+            parser = Parser(tempBelief)
+            temp_sentence = parser.parse()
+            self.beliefBase.add_belief(convert_to_cnf(temp_sentence.formula()))
 
     def check_satisfiability(self):
         print(is_satisfiable(self.sentence.formula()))

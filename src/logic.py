@@ -1,5 +1,5 @@
 from abc import ABC
-
+from sympy.logic.boolalg import Not, And, Or
 import sympy
 from sympy.logic.boolalg import to_cnf
 from sympy.core.symbol import Symbol
@@ -17,21 +17,33 @@ class Sentence(ABC):
 
 class BeliefBase():
 
-    beliefs = []
+    beliefs = None
 
     def __init__(self, CNF:Symbol):
-        print("test")
-
+        self.beliefs = CNF
 
     def print_belief_base(self):
         print(self.beliefs)
 
+    def add_belief(self, belief):
+
+        print("Negation of belief")
+        negation_of_belief = Not(belief)
+        print(negation_of_belief)
+        temp_belief_base = And(self.beliefs, negation_of_belief)
+        print("Temp_belief_base")
+        print(temp_belief_base)
+        satisfiability = satisfiable(temp_belief_base)
+
+        if(satisfiability is not False):
+            self.beliefs = And(self.beliefs, belief)
+        else:
+            print("Not allowed")
 
 
 
 
-
-class Atom(Sentence):
+class Atom_local(Sentence):
     def __init__(self, name: str) -> None:
         self.name = name
 
@@ -47,7 +59,7 @@ class Atom(Sentence):
         return self.name
 
 
-class Not(Sentence):
+class Not_local(Sentence):
     def __init__(self, operand: Sentence) -> None:
         assert isinstance(
             operand, Sentence), f"{operand} is not of type Sentence"
@@ -64,7 +76,7 @@ class Not(Sentence):
 
 
 
-class And(Sentence):
+class And_local(Sentence):
     def __init__(self, left: Sentence, right: Sentence) -> None:
         self.left = left
         self.right = right
@@ -80,7 +92,7 @@ class And(Sentence):
         return f"({self.left.__repr__()} ∧ {self.right.__repr__()})"
 
 
-class Or(Sentence):
+class Or_local(Sentence):
     def __init__(self, left: Sentence, right: Sentence) -> None:
         self.left = left
         self.right = right
@@ -95,7 +107,7 @@ class Or(Sentence):
         return f"({self.left.__repr__()} ∨ {self.right.__repr__()})"
 
 
-class Implies(Sentence):
+class Implies_local(Sentence):
     def __init__(self, left: Sentence, right: Sentence) -> None:
         self.left = left
         self.right = right
@@ -111,7 +123,7 @@ class Implies(Sentence):
         return f"({self.left.__repr__()} => {self.right.__repr__()})"
 
 
-class BiConditional(Sentence):
+class BiConditional_local(Sentence):
     def __init__(self, left: Sentence, right: Sentence) -> None:
         self.left = left
         self.right = right
@@ -126,8 +138,8 @@ class BiConditional(Sentence):
         return f"({self.left.__repr__()} <=> {self.right.__repr__()})"
 
 
-def convert_to_cnf(sentence : str) -> str:
+def convert_to_cnf(sentence : str) -> Symbol:
     return to_cnf(sentence, False)
 
-def is_satisfiable(sentence : str) -> str:
+def is_satisfiable(sentence : str) -> bool:
     return satisfiable(sentence)
