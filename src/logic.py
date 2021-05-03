@@ -1,5 +1,7 @@
 from abc import ABC
-from sympy.logic.boolalg import Not, And, Or
+
+from sympy import simplify
+from sympy.logic.boolalg import Not, And, Or, Equivalent, BooleanTrue
 import sympy
 from sympy.logic.boolalg import to_cnf
 from sympy.core.symbol import Symbol
@@ -27,6 +29,16 @@ class BeliefBase():
 
     def add_belief(self, belief):
 
+        temp_belief_base = And(self.beliefs, belief)
+        temp_belief_base_cnf = to_cnf(temp_belief_base, False)
+        print(self.beliefs)
+        print(temp_belief_base_cnf)
+        check = Equivalent(temp_belief_base_cnf, self.beliefs)
+        print(type(check))
+        print(check)
+        if Equivalent(temp_belief_base_cnf, self.beliefs) == True and type(check) == BooleanTrue:
+            return
+
         print("Negation of belief")
         negation_of_belief = Not(belief)
         print(negation_of_belief)
@@ -34,11 +46,8 @@ class BeliefBase():
         print("Temp_belief_base")
         print(temp_belief_base)
         satisfiability = satisfiable(temp_belief_base)
-
-        if(satisfiability is not False):
-            self.beliefs = And(self.beliefs, belief)
-        else:
-            print("Not allowed")
+        print("Satisfiability")
+        print(satisfiability)
 
 
 
