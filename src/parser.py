@@ -40,7 +40,7 @@ class Parser:
         return self.build_ast(parsed_statement.asList()[0])
 
 
-    def build_ast(self, expr : List) -> Sentence:
+    def build_ast(self, expr: List) -> Sentence:
         """ This function builds an abstract syntax tree from the parsed input.
 
             Parameters:
