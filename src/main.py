@@ -1,6 +1,7 @@
 from src.logic import *
 from utils import *
 from src.parser import Parser
+import functools
 
 class Controller:
 
@@ -94,6 +95,18 @@ class Controller:
                 7: self.check_satisfiability,
                 }
         switcher.get(i, lambda : print("Invalid input"))()
+
+
+def try_except(f):
+    @functools.wraps(f)
+    def inner(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception as ex:
+            print(f.__name__)
+            print(ex)
+    return inner
+
 
 
 
