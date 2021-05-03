@@ -2,6 +2,7 @@ from abc import ABC
 
 import sympy
 from sympy.logic.boolalg import to_cnf
+from sympy.logic.inference import satisfiable
 from typing import Dict
 
 class Sentence(ABC):
@@ -12,6 +13,8 @@ class Sentence(ABC):
     def formula(self) -> str:
         """ returns a string representation of a given sentence """
         pass
+
+
 
 
 class Atom(Sentence):
@@ -110,4 +113,7 @@ class BiConditional(Sentence):
 
 
 def convert_to_cnf(sentence : str) -> str:
-    return to_cnf(sentence, True)
+    return to_cnf(sentence, False)
+
+def is_satisfiable(sentence : str) -> str:
+    return satisfiable(sentence)

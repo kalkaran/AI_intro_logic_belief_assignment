@@ -1,11 +1,11 @@
-from src.logic import Atom, And, Or, Not, Implies, convert_to_cnf
-
+from src.logic import *
+from utils import *
 from src.parser import Parser
 
 class Controller:
 
     def __init__(self):
-        self.model ={"B" : False, "A" : True, "C" : True }
+        self.model ={"B" : True, "A" : True, "C" : True }
         self.sentence = None
 
     def declareNewBeliefBase(self):
@@ -37,13 +37,15 @@ class Controller:
 
             # Implement stuff
 
-
+    def check_satisfiability(self):
+        print(is_satisfiable(self.sentence.formula()))
 
     def printFormula(self):
-        print("\nCurrent belief base: "+self.sentence.formula())
+        print("\nCurrent belief base: "+str(self.sentence.formula()))
 
     def printCNF(self):
         print(convert_to_cnf(self.sentence.formula()))
+
 
     def printEvaluation(self):
         print(self.sentence.evaluate(self.model))
@@ -56,6 +58,8 @@ class Controller:
 
     def printSyntaxInformation(self):
         print("The following syntax is accepted as an input")
+        printValidSyntax()
+
         # Declare syntax in print statement.
 
     def printCurrentBeliefBase(self):
@@ -63,7 +67,7 @@ class Controller:
         if self.sentence is None:
             print("Current belief base is None.")
         else:
-            self.printFormula()
+            self.printCNF()
 
 
 
@@ -75,6 +79,7 @@ class Controller:
         print("4: Create new belief base")
         print("5: Add new random belief base")
         print("6: Add new belief to belief base")
+        print("7: Check satisfiability of belief base ")
 
 
     def preformAction(self, i):
@@ -85,7 +90,8 @@ class Controller:
                 3 : self.printCurrentBeliefBase,
                 4 : self.declareNewBeliefBase,
                 5 : self.declareRandowBeliefBase,
-                6 : self.addNewBeliefToBeliefBase
+                6 : self.addNewBeliefToBeliefBase,
+                7: self.check_satisfiability,
                 }
         switcher.get(i, lambda : print("Invalid input"))()
 
