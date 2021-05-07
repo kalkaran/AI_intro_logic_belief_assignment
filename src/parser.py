@@ -1,6 +1,6 @@
 from typing import List
 import pyparsing as p
-from src.logic import Atom_local, And_local, Or_local, Implies_local, BiConditional_local, Not_local, Sentence
+from logic import Atom, And, Or, Implies, BiConditional, Not, Sentence
 from typing import List
 #from main import try_except
 import functools
@@ -42,11 +42,11 @@ class Parser:
                 ]
             )
 
-        self.operators = { '&' : And_local
-                         , '|' : Or_local
-                         , '=>': Implies_local
-                         , '<=>': BiConditional_local
-                         , '~' : Not_local}
+        self.operators = { '&' : And
+                         , '|' : Or
+                         , '=>': Implies
+                         , '<=>': BiConditional
+                         , '~' : Not}
 
     @try_except
     def parse(self) -> Sentence:
@@ -66,7 +66,7 @@ class Parser:
                                       input.
         """
         if not isinstance(expr, List):
-            return Atom_local(expr)
+            return Atom(expr)
         elif isinstance(expr, List):
             if len(expr) == self.BIN_OP:
                 left_tree, op, right_tree = expr

@@ -1,5 +1,5 @@
-from src.logic import *
-from src.parser import Parser
+from logic import *
+from parser import Parser
 
 example0 = '~(A & B) | ((C & D))'
 example0 = '~(A & B) | ((C & D) | E)'# <- this doesn't work @Ayman looks like only 4 letters allowed :/
@@ -32,7 +32,7 @@ def printValidSyntax():
 
         #print(sentence.evaluate(model))
 
-
+printValidSyntax()
 
 """
     p = Atom("P")

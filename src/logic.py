@@ -1,15 +1,10 @@
 from abc import ABC
 
-from sympy import simplify
-from sympy.logic.boolalg import Not, And, Or, Equivalent, BooleanTrue
-import sympy
-from sympy.logic.boolalg import to_cnf
-from sympy.core.symbol import Symbol
-from sympy.logic.inference import satisfiable
 from typing import Dict
 
+
 class Sentence(ABC):
-    def evaluate(self, model : Dict[str, bool]) -> bool:
+    def evaluate(self, model: Dict[str, bool]) -> bool:
         """ evaluates the truth of a sentence with respect to a particular model """
         pass
 
@@ -17,42 +12,8 @@ class Sentence(ABC):
         """ returns a string representation of a given sentence """
         pass
 
-class BeliefBase():
 
-    beliefs = None
-
-    def __init__(self, CNF:Symbol):
-        self.beliefs = CNF
-
-    def print_belief_base(self):
-        print(self.beliefs)
-
-    def add_belief(self, belief):
-
-        temp_belief_base = And(self.beliefs, belief)
-        temp_belief_base_cnf = to_cnf(temp_belief_base, False)
-        print(self.beliefs)
-        print(temp_belief_base_cnf)
-        check = Equivalent(temp_belief_base_cnf, self.beliefs)
-        print(type(check))
-        print(check)
-        if Equivalent(temp_belief_base_cnf, self.beliefs) == True and type(check) == BooleanTrue:
-            return
-
-        print("Negation of belief")
-        negation_of_belief = Not(belief)
-        print(negation_of_belief)
-        temp_belief_base = And(self.beliefs, negation_of_belief)
-        print("Temp_belief_base")
-        print(temp_belief_base)
-        satisfiability = satisfiable(temp_belief_base)
-        print("Satisfiability")
-        print(satisfiability)
-
-
-
-
-class Atom_local(Sentence):
+class Atom(Sentence):
     def __init__(self, name: str) -> None:
         self.name = name
 
@@ -68,7 +29,7 @@ class Atom_local(Sentence):
         return self.name
 
 
-class Not_local(Sentence):
+class Not(Sentence):
     def __init__(self, operand: Sentence) -> None:
         assert isinstance(
             operand, Sentence), f"{operand} is not of type Sentence"
@@ -84,12 +45,10 @@ class Not_local(Sentence):
         return f"~({self.operand.formula()})"
 
 
-
-class And_local(Sentence):
+class And(Sentence):
     def __init__(self, left: Sentence, right: Sentence) -> None:
         self.left = left
         self.right = right
-
 
     def evaluate(self, model: Dict[str, bool]) -> bool:
         return self.left.evaluate(model) and self.right.evaluate(model)
@@ -101,7 +60,7 @@ class And_local(Sentence):
         return f"({self.left.__repr__()} ∧ {self.right.__repr__()})"
 
 
-class Or_local(Sentence):
+class Or(Sentence):
     def __init__(self, left: Sentence, right: Sentence) -> None:
         self.left = left
         self.right = right
@@ -116,7 +75,7 @@ class Or_local(Sentence):
         return f"({self.left.__repr__()} ∨ {self.right.__repr__()})"
 
 
-class Implies_local(Sentence):
+class Implies(Sentence):
     def __init__(self, left: Sentence, right: Sentence) -> None:
         self.left = left
         self.right = right
@@ -132,13 +91,14 @@ class Implies_local(Sentence):
         return f"({self.left.__repr__()} => {self.right.__repr__()})"
 
 
-class BiConditional_local(Sentence):
+class BiConditional(Sentence):
     def __init__(self, left: Sentence, right: Sentence) -> None:
         self.left = left
         self.right = right
 
     def evaluate(self, model: Dict[str, bool]) -> bool:
-        return ((not self.left.evaluate(model)) or self.right.evaluate(model)) and ((not self.right.evaluate(model)) or self.left.evaluate(model))
+        return ((not self.left.evaluate(model)) or self.right.evaluate(model)) and (
+                    (not self.right.evaluate(model)) or self.left.evaluate(model))
 
     def formula(self) -> str:
         return f"(~{self.left.formula()} | {self.right.formula()}) & (~{self.right.formula()} | {self.left.formula()})"
@@ -147,8 +107,72 @@ class BiConditional_local(Sentence):
         return f"({self.left.__repr__()} <=> {self.right.__repr__()})"
 
 
-def convert_to_cnf(sentence : str) -> Symbol:
-    return to_cnf(sentence, False)
+def impl_free(sentence: Sentence) -> Sentence:
+    if isinstance(sentence, Atom):
+        return sentence
+    elif isinstance(sentence, Not):
+        return Not(impl_free(sentence.operand))
+    elif isinstance(sentence, And):
+        return And(impl_free(sentence.left), impl_free(sentence.right))
+    elif isinstance(sentence, Or):
+        return Or(impl_free(sentence.left), impl_free(sentence.right))
+    elif isinstance(sentence, Implies):
+        return Or(Not(impl_free(sentence.left)), impl_free(sentence.right))
+    elif isinstance(sentence, BiConditional):
+        return impl_free(And(Or(Not(sentence.left), sentence.right), Or(Not(sentence.right), sentence.left)))
+    else:
+        raise ValueError("The given input is not a valid propositional sentence.")
 
-def is_satisfiable(sentence : str) -> bool:
-    return satisfiable(sentence)
+
+def negative_normal_form(sentence: Sentence) -> Sentence:
+    if isinstance(sentence, Atom):
+        return sentence
+    elif isinstance(sentence, Not):
+        if isinstance(sentence.operand, Not):
+            return negative_normal_form(sentence.operand.operand)
+        elif isinstance(sentence.operand, And):
+            return Or(negative_normal_form(Not(sentence.operand.left)),
+                      negative_normal_form(Not(sentence.operand.right)))
+        elif isinstance(sentence.operand, Or):
+            return And(negative_normal_form(Not(sentence.operand.left)),
+                       negative_normal_form(Not(sentence.operand.right)))
+        elif isinstance(sentence.operand, Atom):
+            return sentence
+    elif isinstance(sentence, And):
+        return And(negative_normal_form(sentence.left), negative_normal_form(sentence.right))
+    elif isinstance(sentence, Or):
+        return Or(negative_normal_form(sentence.left), negative_normal_form(sentence.right))
+    else:
+        raise ValueError("The given input is not a valid propositional sentence.")
+
+
+def distribute(s1: Sentence, s2: Sentence) -> Sentence:
+    if isinstance(s1, And):
+        return And(distribute(s1.left, s2), distribute(s1.right, s2))
+    elif isinstance(s2, And):
+        return And(distribute(s1, s2.left), distribute(s1, s2.right))
+    else:
+        return Or(s1, s2)
+
+
+def cnf(sentence: Sentence) -> Sentence:
+    if isinstance(sentence, Atom):
+        return sentence
+    elif isinstance(sentence, Not) and isinstance(sentence.operand, Atom):
+        return sentence
+    elif isinstance(sentence, And):
+        return And(cnf(sentence.left), cnf(sentence.right))
+    elif isinstance(sentence, Or):
+        return distribute(cnf(sentence.left), cnf(sentence.right))
+    else:
+        raise ValueError("Invalid input sentence.")
+
+
+def convert_to_cnf(sentence : Sentence) -> Sentence:
+    imp_free = impl_free(sentence)
+    nnf = negative_normal_form(imp_free)
+    return cnf(nnf)
+
+
+class BeliefBase():
+    pass
