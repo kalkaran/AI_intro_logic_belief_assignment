@@ -5,6 +5,7 @@ from src.controller import Controller
 def main() -> None:
     controller = Controller()
     controller.start_main_loop()
+
     p = Atom("P")
     q = Atom("Q")
     r = Atom("R")
