@@ -1,3 +1,6 @@
+from src.parser import Parser
+from src.logic import *
+
 
 class Agent:
     """
@@ -34,10 +37,31 @@ class Agent:
         is change to true and returned. If not defined_belief_base is than returned and nothing happens.
         """
 
-        # Implement code here.
-        print("Declare new belief base")
+        # Parse input to abstract syntax tree
+        parser = Parser(input)
+        sentence = parser.parse()
 
+        p = Atom("P")
+        sentence2 = And(p,p)
 
+        print(type(sentence))
+        print(type(sentence2))
+
+        if type(sentence) is type(sentence2):
+            print(True)
+
+        print(f"Before: {sentence}")
+
+        # Convect sentence info CNF
+        CNF = convert_to_cnf(sentence)
+        print(f"After: {CNF}")
+
+        # Split CNF into clauses
+        list_of_clauses = split_cnf_into_list_clauses(CNF)
+        print(f"List: {list_of_clauses}")
+
+        # Set belief base as list of clauses
+        self.belief_base = list_of_clauses
 
     def add_new_belief_to_belief_base(self):
         # Todo: Add method for adding new belief to belief base

@@ -1,11 +1,12 @@
 from src.parser import Parser
 from src.logic import Atom, Not, And, Or, Implies, BiConditional, convert_to_cnf, split_cnf_into_list_clauses
 from src.controller import Controller
+from src.agent import Agent
 
 def main() -> None:
     controller = Controller()
     #controller.start_main_loop()
-
+    """
     p = Atom("P")
     q = Atom("Q")
     r = Atom("R")
@@ -17,6 +18,11 @@ def main() -> None:
     print(f"Before: {sentence}")
     print(f"After: {convert_to_cnf(sentence)}")
     split_cnf_into_list_clauses(sentence)
+    """
+
+    agent = Agent()
+    agent.declare_new_belief_base("P & P")
+    agent.print_belief_base()
 
     # print(sentence.evaluate(model))
 

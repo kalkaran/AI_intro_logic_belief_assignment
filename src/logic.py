@@ -174,11 +174,15 @@ def convert_to_cnf(sentence : Sentence) -> Sentence:
     return cnf(nnf)
 
 
-def split_cnf_into_list_clauses(sentence : Sentence) -> Sentence:
-    local_cnf = convert_to_cnf(sentence)
-    list = recursive_split(local_cnf)
-    print(f"Clause: {list}")
-    print(f"Clause: {remove_redundant_clauses(list)}")
+def split_cnf_into_list_clauses(sentence : Sentence) -> list:
+    CNF_list = recursive_split(sentence)
+    print(f"List: {CNF_list}")
+    filtered_CNF_list = remove_redundant_clauses(CNF_list)
+    print(f"List: {filtered_CNF_list}")
+
+    return filtered_CNF_list
+
+
 
 
 def recursive_split(sentence : Sentence, clause_list=None):
@@ -216,6 +220,9 @@ def sub_tree_contains_and(sentence : Sentence):
 
 
 def remove_redundant_clauses(clause_list):
+    for belief in clause_list:
+        print(type(belief))
+        print(belief)
     return list(dict.fromkeys(clause_list))
 
 
