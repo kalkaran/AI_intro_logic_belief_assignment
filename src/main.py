@@ -1,8 +1,10 @@
 from src.parser import Parser
 from src.logic import Atom, Not, And, Or, Implies, BiConditional, convert_to_cnf
-
+from src.controller import Controller
 
 def main() -> None:
+    controller = Controller()
+    controller.start_main_loop()
     p = Atom("P")
     q = Atom("Q")
     r = Atom("R")
