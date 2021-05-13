@@ -9,7 +9,7 @@ class Sentence(ABC):
         pass
 
     def formula(self) -> str:
-        """ returns a string representation of a given sentence """
+        """ returns a string representation of a given sentence"""
         pass
 
 
@@ -172,6 +172,51 @@ def convert_to_cnf(sentence : Sentence) -> Sentence:
     imp_free = impl_free(sentence)
     nnf = negative_normal_form(imp_free)
     return cnf(nnf)
+
+
+def split_cnf_into_list_clauses(sentence : Sentence) -> Sentence:
+    local_cnf = convert_to_cnf(sentence)
+    list = recursive_split(local_cnf)
+    print(f"Clause: {list}")
+    print(f"Clause: {remove_redundant_clauses(list)}")
+
+
+def recursive_split(sentence : Sentence, clause_list=None):
+    # Creates list if list has not been passed as argument
+    if clause_list is None:
+        clause_list = []
+    # Return the list if we need to replicate 0 more times
+    if isinstance(sentence, Atom):
+        return clause_list
+    elif isinstance(sentence, Not):
+        return Not(sentence.operand)
+    elif isinstance(sentence, And):
+        if not sub_tree_contains_and(sentence.left):
+            clause_list.append(sentence.left)
+
+        if not sub_tree_contains_and(sentence.right):
+            clause_list.append(sentence.right)
+
+        recursive_split(sentence.left, clause_list)
+        recursive_split(sentence.right, clause_list)
+    elif isinstance(sentence, Or):
+        return Or(sentence.left, sentence.right)
+    return clause_list
+
+
+def sub_tree_contains_and(sentence : Sentence):
+    if isinstance(sentence, Atom):
+        return False
+    elif isinstance(sentence, Not):
+        return False
+    elif isinstance(sentence, And):
+        return True
+    elif isinstance(sentence, Or):
+        return False
+
+
+def remove_redundant_clauses(clause_list):
+    return list(dict.fromkeys(clause_list))
 
 
 class BeliefBase():
