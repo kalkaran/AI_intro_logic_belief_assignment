@@ -44,8 +44,14 @@ class Agent:
         p = Atom("P")
         sentence2 = And(p,p)
 
+        print(dir(sentence))
+        print(dir(sentence2))
         print(type(sentence))
         print(type(sentence2))
+        print(bytes(sentence))
+        print(bytes(sentence2))
+        
+
 
         if type(sentence) is type(sentence2):
             print(True)
