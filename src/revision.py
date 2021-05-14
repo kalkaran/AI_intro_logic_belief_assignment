@@ -45,6 +45,42 @@ class revisor:
 
 
 
+    def resolve(c1, c2):
+        c1_copy = Clause.copy(c1)
+        c2_copy = Clause.copy(c2)
+
+        # find and remove all complements
+        for c1_symbol in c1_copy.positives:
+            for c2_symbol in c2_copy.negatives:
+                # if the symbols match, remove the symbols from c1 and c2
+                if c1_symbol == c2_symbol and c1_symbol in c1_copy.positives:
+                    c1_copy.del_positive_symbol(c1_symbol)
+                    c2_copy.del_negative_symbol(c2_symbol)
+        for c2_symbol in c2_copy.positives:
+            for c1_symbol in c1_copy.negatives:
+                # if the symbols match, remove the symbols from c1 and c2
+                if c2_symbol == c1_symbol and c2_symbol in c2_copy.positives:
+                    c1_copy.del_negative_symbol(c1_symbol)
+                    c2_copy.del_positive_symbol(c2_symbol)
+
+        # remove redundant symbols
+        for c1_symbol in c1_copy.positives:
+            for c2_symbol in c2_copy.positives:
+                # if the symbols match, remove the symbol from c2
+                if c1_symbol == c2_symbol and c1_symbol in c1_copy.positives:
+                    c2_copy.del_positive_symbol(c2_symbol)
+        for c1_symbol in c1_copy.negatives:
+            for c2_symbol in c2_copy.negatives:
+                # if the symbols match, remove the symbol from c2
+                if c1_symbol == c2_symbol and c1_symbol in c1_copy.negatives:
+                    c2_copy.del_negative_symbol(c2_symbol)
+
+        resolvent = Clause.combine_clauses(c1_copy, c2_copy)
+
+        # return the resolvent
+        return resolvent
+
+
     def expand(self, expansion_belief):
         parser = Parser(expansion_belief)
         sentence = parser.parse()

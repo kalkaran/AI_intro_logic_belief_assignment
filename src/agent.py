@@ -48,9 +48,8 @@ class Agent:
         print(dir(sentence2))
         print(type(sentence))
         print(type(sentence2))
-        print(bytes(sentence))
-        print(bytes(sentence2))
-        
+
+        sentence3 = iiiîooooy.\\iiiiiikiii88
 
 
         if type(sentence) is type(sentence2):

@@ -107,6 +107,9 @@ class BiConditional(Sentence):
         return f"({self.left.__repr__()} <=> {self.right.__repr__()})"
 
 
+
+
+
 def impl_free(sentence: Sentence) -> Sentence:
     if isinstance(sentence, Atom):
         return sentence
@@ -185,7 +188,7 @@ def split_cnf_into_list_clauses(sentence : Sentence) -> list:
 
 
 
-def recursive_split(sentence : Sentence, clause_list=None):
+def recursive_split(sentence: Sentence, clause_list=None):
     # Creates list if list has not been passed as argument
     if clause_list is None:
         clause_list = []
@@ -208,7 +211,7 @@ def recursive_split(sentence : Sentence, clause_list=None):
     return clause_list
 
 
-def sub_tree_contains_and(sentence : Sentence):
+def sub_tree_contains_and(sentence: Sentence):
     if isinstance(sentence, Atom):
         return False
     elif isinstance(sentence, Not):
