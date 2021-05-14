@@ -9,67 +9,57 @@ class Agent:
     defined_belief_base = False
 
     """
-    The belief set is propositional logic in symbolic form,
+    The belief base is propositional logic in symbolic form,
     which is converted into CNF form and saved as a list of clauses. 
     Given (P => Q & Z) converted to CNF (~P | Q & Z) into list of clauses [~P | Q, Z]       
     """
     belief_base = []
 
-    def print_belief_base(self):
-        for belief in self.belief_base:
-            print(belief)
 
-    def declare_new_belief_base(self, input:str):
+    def print_belief_base(self):
+        """
+            Prints the current belief base.
+        """
+        print(f"Before: {self.belief_base}")
+
+    def declare_new_belief_base(self, sentence:str):
         # Todo: Add method for parsing new belief base
 
         """
-        Takes a string input containing propositional logic in symbolic form,
-        parses it as an abstract syntax tree, which in than converted to CNF form.
+        Contains functionality for adding a new belief to the belief base.
 
-        The CNF is divided into a set of clauses and saved as the belief base.
+        Parameters:
+            sentence (str): Takes a string input containing propositional logic in symbolic form.
 
-        The syntax is valid if
-        - The syntax does not contain any errors when parsed
-        - The the belief base is satisfiable: Contain a model for which a
-          combination of values makes it true.
-
-        If the syntax is valid the belief base is set, the boolean value defined_belief_base
-        is change to true and returned. If not defined_belief_base is than returned and nothing happens.
+        Step 1: The sentence is parsed and an abstract syntax tree is created.
+        Step 2: The abstract syntax tree is converted to CNF
+        Step 3: The abstract syntax containing the sentence is divided into a list of clauses of beliefs
+        Step 4: Redundant beliefs in the list are removed.
+        Step 5: The belief base is declared and defined_belief_base is change to true.
         """
 
-        # Parse input to abstract syntax tree
-        parser = Parser(input)
-        sentence = parser.parse()
-
-        p = Atom("P")
-        sentence2 = And(p,p)
-
-        print(dir(sentence))
-        print(dir(sentence2))
-        print(type(sentence))
-        print(type(sentence2))
-        print(bytes(sentence))
-        print(bytes(sentence2))
-        
-
-
-        if type(sentence) is type(sentence2):
-            print(True)
-
+        # Step 1: The sentence is parsed and an abstract syntax tree is created.
+        sentence = Parser(sentence).parse()
         print(f"Before: {sentence}")
 
-        # Convect sentence info CNF
+        # Step 2: The abstract syntax tree is converted to CNF
         CNF = convert_to_cnf(sentence)
         print(f"After: {CNF}")
 
-        # Split CNF into clauses
+        # Step 3: The abstract syntax containing the sentence is divided into a list of clauses
         list_of_clauses = split_cnf_into_list_clauses(CNF)
         print(f"List: {list_of_clauses}")
 
-        # Set belief base as list of clauses
-        self.belief_base = list_of_clauses
+        # Step 4: Redundant beliefs in the list are removed.
+        list_of_clauses_filtered = remove_redundant_clauses(CNF)
+        print(f"Filtered List: {list_of_clauses_filtered}")
 
-    def add_new_belief_to_belief_base(self):
+        # Step 5: The belief base is declared and defined_belief_base is change to true.
+        self.belief_base = list_of_clauses_filtered
+        self.defined_belief_base = True
+
+
+    def add_new_belief_to_belief_base(self, input:str):
         # Todo: Add method for adding new belief to belief base
 
         """
@@ -98,6 +88,16 @@ class Agent:
         # Implement code here.
         print("Added new belief to belief base")
 
+    def check_satisfiability_of_sentence(self, sentence:str):
+
+        # Todo: Add method for checking satisfiability of sentence
+
+        return True
+
+
+
+
+
     def use_predefined_belief_base(self):
         # Todo: Add method for using predefined belief base
 
@@ -113,6 +113,10 @@ class Agent:
         print("Belief base with predefined beliefs")
 
 
+    def check_if_belief_is_entail_by_belief_base(self, input:str):
+
+        # Implement code here.
+        print("Checks is belief is entail by belief_base")
 
 
 
