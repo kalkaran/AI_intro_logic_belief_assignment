@@ -4,6 +4,14 @@ from src.logic import *
 
 class Agent:
     """
+    Some of the code is this class can be refactored if we want to...
+    as some of the steps are repeated in the methods.
+    But for clarity its keep divided.
+
+    Also it a bit redunted to parses the same string multiple times when preforming the different check.
+    - The string could just be parses ones and than parsed around as an ast/Sentence.
+    - It done this way in hope of reducing the links between the different methods.
+
     The Agent class contains methods for interaction with the belief base.
     - Create a new belief base
     - Adding a new belief to the belief base
@@ -178,5 +186,79 @@ class Agent:
         print("Belief base with predefined beliefs")
 
     def check_if_belief_is_entailed_by_belief_base(self, sentence: str):
-        # Implement code here.
-        print("Checks is belief is entail by belief_base")
+
+        # Todo: Add method for checking if a belief is entailed by the belief_base
+
+        """
+        Contains functionality for checking if a belief is entailed by the belief_base
+
+        Parameters:
+            sentence (str): Takes a string input containing propositional logic in symbolic form.
+
+        Step 1: The sentence is parsed and an abstract syntax tree is created.
+        Step 2: The abstract syntax tree is converted to CNF
+        Step 3: The sentence in the abstract syntax tree is negated
+        Step 4: The negated sentence is added to a copy of the belief base
+        Step 5: The temp belief base where the negated sentence was added is check
+                for logical entailment with the resolution method.
+        Step 6: Base on the type of action return for the logical entailment check True or False is returned.
+
+        """
+
+        # Step 1: The sentence is parsed and an abstract syntax tree is created.
+        sentence = Parser(sentence).parse()
+        print(f"Before: {sentence}")
+
+        # Step 2: The abstract syntax tree is converted to CNF
+        CNF = convert_to_cnf(sentence)
+        print(f"After: {CNF}")
+
+        # Step 3: The sentence in the abstract syntax tree is negated
+        negation = negate_sentence(CNF)
+        print(f"Negated: {negation}")
+
+        # Step 4: The negated sentence is added to a copy of the belief base
+        temp_belief_base = adds_sentence_to_belief_base(negation, self.belief_base)
+        print(f"Temp belief base: {temp_belief_base}")
+
+        # Step 5: Check for logical entailment of added belief with resolution.
+        action = check_for_entailment(temp_belief_base)
+
+        # Step 6: Preform a revision of the belief base, if its required.
+        if action is Action.revision:
+            return True
+        else:
+            return False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

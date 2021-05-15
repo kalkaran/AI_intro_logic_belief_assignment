@@ -103,7 +103,7 @@ class Controller:
             return
 
         # Step 2
-        sentence = input("Belief base: ")
+        sentence = input("Belief: ")
 
         # Step 3
         if not validator.syntax_is_valid(sentence):
@@ -137,7 +137,7 @@ class Controller:
             return
 
         # Step 2
-        sentence = input("Belief base: ")
+        sentence = input("Belief: ")
 
         # Step 3
         if not validator.syntax_is_valid(sentence):
