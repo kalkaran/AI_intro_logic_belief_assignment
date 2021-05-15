@@ -6,8 +6,8 @@ class Controller:
     """
     The controller class handles the flow of the program
     - It creates the agent: The agent class contains methods for creating and revising the belief base
-    - It contains methods for display general information and valid syntax example.
-    - It contains method for creating the a new belief base, adding new belief to the belief base
+    - It contains methods for displaying general information and valid syntax examples.
+    - It contains method for creating a new belief base, adding new belief to the belief base
       and checking for entailment of a belief in the belief base.
     """
 
@@ -150,7 +150,7 @@ class Controller:
             return
 
         # Step 5
-        if self.agent.check_if_belief_is_entail_by_belief_base(sentence):
+        if self.agent.check_if_belief_is_entailed_by_belief_base(sentence):
             display_utils.print_entailment_valid()
         else:
             display_utils.print_entailment_invalid()

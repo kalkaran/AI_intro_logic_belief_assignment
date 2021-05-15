@@ -203,9 +203,9 @@ def adds_sentence_to_belief_base(sentence : Sentence, belief_base: list) -> list
 
     Parameters:
         sentence (Sentence): Takes a sentence which has been converted to CNF.
-        belief_base (List): Takes a list of beliefs, which is the belief base.
+        belief_base (List): Takes a list of beliefs.
     #Returns:
-        list(Sentence): The returns a list of all beliefs where the sentence has been added.
+        list(Sentence): The returns a list of all beliefs, where the sentence has been added.
     """
 
     new_belief_base = belief_base.append(sentence)
@@ -217,7 +217,7 @@ def split_sentence_into_list_of_beliefs(sentence : Sentence) -> list:
     # Todo: Add method for splitting a sentence into a list of beliefs
 
     """
-     Split a sentence into a list of clauses/belief.
+     Split a sentence into a list of clauses/beliefs.
      - A sentence is divided by each "and"
 
     Parameters:
@@ -241,9 +241,9 @@ def remove_redundant_beliefs(belief_list: list):
     # Todo: Add method for removing redundant beliefs from a list of beliefs
 
     """
-     Removes redundant belief from a list of beliefs.
+     Removes redundant beliefs from a list of beliefs.
      - When a sentence is split into a list of belief it can contain the same belief multiple times.
-     - Given the sentence P & P its split into a list of beliefs [P, P] by the list should only contain P.
+     - Given the sentence P & P its split into a list of beliefs [P, P] but the list should only contain P.
 
     Parameters:
         belief_list (list): Takes a list of Sentences representing the beliefs
@@ -260,6 +260,91 @@ def remove_redundant_beliefs(belief_list: list):
     # ---------------------------
 
     return new_belief_list
+
+def find_all_possible_models(atom_list: list):
+    # Todo: Add method for creating all possible models based on a list of atoms.
+
+    """
+     Creates a list of models based on the atoms that exits in the belief base.
+
+     Given that the belief base contains P, Q and R then all possible models in the belief base is.
+     - The number of models is always 2^(Number of atoms in the belief base)
+
+     model = {"P": True, "Q": True, "R": True}
+     model = {"P": False, "Q": False, "R": False}
+
+     model = {"P": True, "Q": True, "R": False}
+     model = {"P": True, "Q": False, "R": True}
+     model = {"P": False, "Q": True, "R": True}
+
+     model = {"P": True, "Q": False, "R": False}
+     model = {"P": False, "Q": False, "R": True}
+     model = {"P": False, "Q": True, "R": False}
+
+    Parameters:
+        atom_list (list): Takes a list of atoms.
+
+    #Returns:
+        list(Models): The returns a list of Models
+    """
+    list_of_atoms = []
+
+    # --- Implement code here---
+
+
+    # ---------------------------
+
+    return list_of_atoms
+
+
+def model_checking(belief_list: list, model_list:list)->bool:
+    # Todo: Add method for preforming model checking
+
+    """
+    Check if there exits a model for which the belief list is true.
+    - Loops through the models and check if the model makes the belief list true.
+
+    If the belief list contains [P, Q] then the model = {"P": True, "Q": True}
+    will result in the belief base being true.
+
+    Parameters:
+        belief_list (list): Takes a list of beliefs
+        model_list (list): Takes a list of models based on all the atoms that exits in the belief list
+    #Returns:
+        valid(boolean): The returns a list of Models
+    """
+
+
+    # --- Implement code here---
+
+    # ---------------------------
+
+    return True
+
+
+
+
+def find_all_atoms_in_belief_base(belief_list: list):
+    # Todo: Add method for removing redundant beliefs from a list of beliefs
+
+    """
+     Loops through the belief list, finds all atoms and adds them to a list
+
+    Parameters:
+        belief_list (list): Takes a list of sentences representing the belief base
+
+    #Returns:
+        list(Atom): It returns a list of all atoms in the belief list.
+    """
+    list_of_atoms = []
+
+    # --- Implement code here---
+
+
+    # ---------------------------
+
+    return list_of_atoms
+
 
 def check_for_entailment(belief_base: list):
     # Todo: Add a method for checking for entailment in a belief base
@@ -304,7 +389,7 @@ def revise_belief_base(belief_base: list, action:Action, belief:Sentence):
         belief (Sentence): The belief that should be added to the belief base.
 
     #Returns:
-        list : Returns an revised list of beliefs as the new belief base.
+        list : Returns a revised list of beliefs as the new belief base.
     """
 
     revised_belief_base = belief_base
