@@ -1,5 +1,5 @@
 from abc import ABC
-
+from action import *
 from typing import Dict
 
 
@@ -260,6 +260,64 @@ def remove_redundant_beliefs(belief_list: list):
     # ---------------------------
 
     return new_belief_list
+
+def check_for_entailment(belief_base: list):
+    # Todo: Add a method for checking for entailment in a belief base
+
+    """
+     Checking for entailment in a belief base.
+     - It done by preforming resolution on the belief base.
+     - When preforming resolution it checks if two clauses can be resolved to an empty clause,
+      when added the negation of a belief to the belief base.
+      If this is true, it indicating that the belief is entailed by the belief base.
+    - If the belief is entailed by the belief base, revision of the belief base must be preformed.
+    - If the belief is not entailed by the belief base, it can just be added to the belief base.
+
+    Parameters:
+        belief_base(list): Takes a belief base, where a negated belief has been added to it.
+
+    #Returns:
+        action: Return an action based on the result of the check.
+    """
+
+    # --- Implement code here---
+
+
+    # ---------------------------
+
+    return Action.revision
+
+def revise_belief_base(belief_base: list, action:Action, belief:Sentence):
+    # Todo: Add a method for revision of a belief base.
+
+    """
+     Preforms a revision of a belief base.
+     - The revision of a belief base is done with the intend to keeps as must information as possible.
+     - Different techniques can be used, but their all build on the idea of reminder set
+     - Look at Maxichoice Contraction,  Full-Meet Contraction and Partial-Meet Contraction
+     - If the belief is not entailed by the belief base, it can just be added to the belief base.
+
+    Parameters:
+        belief_base(list): The current belief base.
+        action (Action): An action base on the entailment check of the belief base,
+                        where a negated belief was added to it.
+        belief (Sentence): The belief that should be added to the belief base.
+
+    #Returns:
+        list : Returns an revised list of beliefs as the new belief base.
+    """
+
+    revised_belief_base = belief_base
+
+    # --- Implement code here---
+
+
+    # ---------------------------
+
+    return revised_belief_base
+
+
+
 
 
 class BeliefBase():

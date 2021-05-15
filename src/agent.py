@@ -90,10 +90,16 @@ class Agent:
 
         # Step 4: Redundant beliefs in the list are removed.
         temp_belief_base = adds_sentence_to_belief_base(negation, self.belief_base)
-        print(f"Filtered List: {temp_belief_base}")
+        print(f"Temp belief base: {temp_belief_base}")
 
+        # Step 5: Check for logical entailment of added belief with resolution.
+        action = check_for_entailment(temp_belief_base)
 
+        # Step 6: Preform a revision of the belief base, if its required.
+        revised_belief_base = revise_belief_base(action, self.belief_base, sentence)
 
+        # Step 7: Update the belief base in the agent.
+        self.belief_base = revised_belief_base
 
 
     def check_satisfiability_of_sentence(self, sentence: str):
