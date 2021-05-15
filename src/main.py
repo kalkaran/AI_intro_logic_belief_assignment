@@ -1,5 +1,5 @@
 from src.parser import Parser
-from src.logic import Atom, Not, And, Or, Implies, BiConditional, convert_to_cnf, split_cnf_into_list_clauses
+from src.logic import Atom, Not, And, Or, Implies, BiConditional, convert_to_cnf, split_sentence_into_list_of_beliefs
 from src.controller import Controller
 from src.agent import Agent
 

@@ -174,56 +174,92 @@ def convert_to_cnf(sentence : Sentence) -> Sentence:
     return cnf(nnf)
 
 
-def split_cnf_into_list_clauses(sentence : Sentence) -> list:
-    CNF_list = recursive_split(sentence)
-    print(f"List: {CNF_list}")
-    filtered_CNF_list = remove_redundant_clauses(CNF_list)
-    print(f"List: {filtered_CNF_list}")
+def negate_sentence(sentence : Sentence) -> Sentence:
+    # Todo: Add method for negating a sentence.
 
-    return filtered_CNF_list
+    """
+     Negates a sentence
 
+    Parameters:
+        sentence (Sentence): Takes a sentence which has been converted to CNF.
 
+    #Returns:
+        negation (Sentence): Returns the negation of the sentence
+    """
 
-
-def recursive_split(sentence : Sentence, clause_list=None):
-    # Creates list if list has not been passed as argument
-    if clause_list is None:
-        clause_list = []
-    # Return the list if we need to replicate 0 more times
-    if isinstance(sentence, Atom):
-        return clause_list
-    elif isinstance(sentence, Not):
-        return Not(sentence.operand)
-    elif isinstance(sentence, And):
-        if not sub_tree_contains_and(sentence.left):
-            clause_list.append(sentence.left)
-
-        if not sub_tree_contains_and(sentence.right):
-            clause_list.append(sentence.right)
-
-        recursive_split(sentence.left, clause_list)
-        recursive_split(sentence.right, clause_list)
-    elif isinstance(sentence, Or):
-        return Or(sentence.left, sentence.right)
-    return clause_list
+    # --- Implement code here---
 
 
-def sub_tree_contains_and(sentence : Sentence):
-    if isinstance(sentence, Atom):
-        return False
-    elif isinstance(sentence, Not):
-        return False
-    elif isinstance(sentence, And):
-        return True
-    elif isinstance(sentence, Or):
-        return False
+    #---------------------------
+
+    return sentence
 
 
-def remove_redundant_clauses(clause_list):
-    for belief in clause_list:
-        print(type(belief))
-        print(belief)
-    return list(dict.fromkeys(clause_list))
+def adds_sentence_to_belief_base(sentence : Sentence, belief_base: list) -> list:
+    # Todo: Add method for adding a sentence/belief to a belief base
+
+    """
+     Adds s sentence/belief to a belief base.
+
+    Parameters:
+        sentence (Sentence): Takes a sentence which has been converted to CNF.
+        belief_base (List): Takes a list of beliefs, which is the belief base.
+    #Returns:
+        list(Sentence): The returns a list of all beliefs where the sentence has been added.
+    """
+
+    new_belief_base = belief_base.append(sentence)
+
+    return new_belief_base
+
+
+def split_sentence_into_list_of_beliefs(sentence : Sentence) -> list:
+    # Todo: Add method for splitting a sentence into a list of beliefs
+
+    """
+     Split a sentence into a list of clauses/belief.
+     - A sentence is divided by each "and"
+
+    Parameters:
+        sentence (Sentence): Takes a sentence which has been converted to CNF.
+
+    #Returns:
+        list(Sentence): It returns a list of all beliefs in the sentence, when divided by each "and"
+    """
+
+    belief_list = [sentence]
+
+    # --- Implement code here---
+
+
+    #---------------------------
+
+    return belief_list
+
+
+def remove_redundant_beliefs(belief_list: list):
+    # Todo: Add method for removing redundant beliefs from a list of beliefs
+
+    """
+     Removes redundant belief from a list of beliefs.
+     - When a sentence is split into a list of belief it can contain the same belief multiple times.
+     - Given the sentence P & P its split into a list of beliefs [P, P] by the list should only contain P.
+
+    Parameters:
+        belief_list (list): Takes a list of Sentences representing the beliefs
+
+    #Returns:
+        list(Sentence): The returns a list where all redundant beliefs are removed
+    """
+
+    new_belief_list = belief_list
+
+    # --- Implement code here---
+
+
+    # ---------------------------
+
+    return new_belief_list
 
 
 class BeliefBase():
