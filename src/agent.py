@@ -62,7 +62,7 @@ class Agent:
         print(f"After: {CNF}")
 
         # Step 3: The abstract syntax containing the sentence is divided into a list beliefs
-        list_of_clauses = split_sentence_into_list_of_beliefs(CNF)
+        list_of_clauses = collect_conjuncts(CNF)
         print(f"List: {list_of_clauses}")
 
         # Step 4: Redundant beliefs in the list are removed.
@@ -148,7 +148,7 @@ class Agent:
         print(f"After: {CNF}")
 
         # Step 3: The abstract syntax containing the sentence is divided into a list beliefs
-        list_of_beliefs = split_sentence_into_list_of_beliefs(CNF)
+        list_of_beliefs = collect_conjuncts(CNF)
         print(f"Negated: {list_of_beliefs}")
 
         # Step 4: Redundant beliefs in the list are removed.
@@ -159,7 +159,7 @@ class Agent:
         list_of_atoms = find_all_atoms_in_belief_base(list_of_beliefs_filtered)
 
         # Step 6: All possible models is created based on the atoms in the belief list
-        list_of_models = find_all_possible_models(list_of_atoms)
+        list_of_models = collect_atoms(CNF)
 
         # Step 7 The list of beliefs is evaluated based on all possible models.
         exits_valid_combination_in_belief_base = model_checking(list_of_beliefs_filtered, list_of_models)

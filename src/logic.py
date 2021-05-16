@@ -3,6 +3,9 @@ from action import *
 from typing import Dict
 
 
+# import src.parser as P
+
+
 class Sentence(ABC):
     def evaluate(self, model: Dict[str, bool]) -> bool:
         """ evaluates the truth of a sentence with respect to a particular model """
@@ -98,9 +101,9 @@ class BiConditional(Sentence):
 
     def evaluate(self, model: Dict[str, bool]) -> bool:
         return ((not self.left.evaluate(model)) or self.right.evaluate(model)) and (
-                    (not self.right.evaluate(model)) or self.left.evaluate(model))
+                (not self.right.evaluate(model)) or self.left.evaluate(model))
 
-    def formula(self) -> str:
+    def belief_list(self) -> str:
         return f"(~{self.left.formula()} | {self.right.formula()}) & (~{self.right.formula()} | {self.left.formula()})"
 
     def __repr__(self) -> str:
@@ -168,7 +171,7 @@ def cnf(sentence: Sentence) -> Sentence:
         raise ValueError("Invalid input sentence.")
 
 
-def convert_to_cnf(sentence : Sentence) -> Sentence:
+def convert_to_cnf(sentence: Sentence) -> Sentence:
     imp_free = impl_free(sentence)
     nnf = negative_normal_form(imp_free)
     return cnf(nnf)
@@ -187,15 +190,10 @@ def negate_sentence(sentence : Sentence) -> Sentence:
         negation (Sentence): Returns the negation of the sentence
     """
 
-    # --- Implement code here---
+    return Not(sentence)
 
 
-    #---------------------------
-
-    return sentence
-
-
-def adds_sentence_to_belief_base(sentence : Sentence, belief_base: list) -> list:
+def adds_sentence_to_belief_base(sentence: Sentence, belief_base: list) -> list:
     # Todo: Add method for adding a sentence/belief to a belief base
 
     """
@@ -213,7 +211,7 @@ def adds_sentence_to_belief_base(sentence : Sentence, belief_base: list) -> list
     return new_belief_base
 
 
-def split_sentence_into_list_of_beliefs(sentence : Sentence) -> list:
+def collect_conjuncts(sentence: Sentence) -> list:
     # Todo: Add method for splitting a sentence into a list of beliefs
 
     """
@@ -226,15 +224,10 @@ def split_sentence_into_list_of_beliefs(sentence : Sentence) -> list:
     #Returns:
         list(Sentence): It returns a list of all beliefs in the sentence, when divided by each "and"
     """
-
-    belief_list = [sentence]
-
-    # --- Implement code here---
-
-
-    #---------------------------
-
-    return belief_list
+    if isinstance(sentence, And):
+        return collect_conjuncts(sentence.left) + collect_conjuncts(sentence.right)
+    else:
+        return [sentence]
 
 
 def remove_redundant_beliefs(belief_list: list):
@@ -252,16 +245,12 @@ def remove_redundant_beliefs(belief_list: list):
         list(Sentence): The returns a list where all redundant beliefs are removed
     """
 
-    new_belief_list = belief_list
-
-    # --- Implement code here---
-
-
-    # ---------------------------
+    new_belief_list = list(set(belief_list))
 
     return new_belief_list
 
-def find_all_possible_models(atom_list: list):
+
+def collect_atoms(sentence: Sentence):
     # Todo: Add method for creating all possible models based on a list of atoms.
 
     """
@@ -286,18 +275,42 @@ def find_all_possible_models(atom_list: list):
 
     #Returns:
         list(Models): The returns a list of Models
+        :param sentence:
     """
     list_of_atoms = []
 
-    # --- Implement code here---
+    if isinstance(sentence, Atom):
+        return {sentence.name}
+    elif isinstance(sentence, Not):
+        return set.union(collect_atoms(sentence.operand))
+    else:
+        return set.union(collect_atoms(sentence.left), collect_atoms(sentence.right))
 
 
-    # ---------------------------
+def check_all(belief_sentence: Sentence, sentence: Sentence, atoms, model):
+    if not atoms:
+        if belief_sentence.evaluate(model):
+            return sentence.evaluate(model)
+        return True
 
-    return list_of_atoms
+    else:
+        current_atoms = atoms.copy()
+        atom = current_atoms.pop()
+
+        true_model = model.copy()
+        true_in_model = {atom: True}
+        true_model.update(true_in_model)
+
+        print(f"True model: {true_model}")
+        false_model = model.copy()
+        false_in_model = {atom: False}
+        false_model.update(false_in_model)
+
+        return check_all(belief_sentence, sentence, current_atoms, true_model) \
+               and check_all(belief_sentence, sentence, current_atoms, false_model)
 
 
-def model_checking(belief_list: list, model_list:list)->bool:
+def model_checking(belief: Sentence, query: Sentence) -> bool:
     # Todo: Add method for preforming model checking
 
     """
@@ -308,20 +321,14 @@ def model_checking(belief_list: list, model_list:list)->bool:
     will result in the belief base being true.
 
     Parameters:
-        belief_list (list): Takes a list of beliefs
-        model_list (list): Takes a list of models based on all the atoms that exits in the belief list
+        belief (list): Takes a list of beliefs
+        query: ...
     #Returns:
         valid(boolean): The returns a list of Models
     """
 
-
-    # --- Implement code here---
-
-    # ---------------------------
-
-    return True
-
-
+    atoms = set.union(collect_atoms(query), collect_atoms(belief))
+    return check_all(belief, query, atoms, dict())
 
 
 def find_all_atoms_in_belief_base(belief_list: list):
@@ -339,7 +346,6 @@ def find_all_atoms_in_belief_base(belief_list: list):
     list_of_atoms = []
 
     # --- Implement code here---
-
 
     # ---------------------------
 
@@ -367,12 +373,12 @@ def check_for_entailment(belief_base: list):
 
     # --- Implement code here---
 
-
     # ---------------------------
 
     return Action.revision
 
-def revise_belief_base(belief_base: list, action:Action, belief:Sentence):
+
+def revise_belief_base(belief_base: list, action: Action, belief: Sentence):
     # Todo: Add a method for revision of a belief base.
 
     """
@@ -396,13 +402,9 @@ def revise_belief_base(belief_base: list, action:Action, belief:Sentence):
 
     # --- Implement code here---
 
-
     # ---------------------------
 
     return revised_belief_base
-
-
-
 
 
 class BeliefBase():

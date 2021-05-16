@@ -26,6 +26,7 @@ def printValidSyntax():
         # parser = Parser(sentence)
         parser = Parser(example)
         sentence = parser.parse()
+
         print(f"{example} is parsed as:", sentence)
         print(f" Sentence formula : {sentence.formula()}")
         print(f" CNF Form : {convert_to_cnf(sentence.formula())}")
