@@ -111,6 +111,12 @@ class BiConditional(Sentence):
 
 
 def impl_free(sentence: Sentence) -> Sentence:
+    """
+        This function has been implemented from the pseudocode given in
+        Huth, M., & Ryan, M. (2004). Propositional logic. In
+        Logic in Computer Science: Modelling and Reasoning about Systems (pp. 1-92).
+        Cambridge: Cambridge University Press.
+    """
     if isinstance(sentence, Atom):
         return sentence
     elif isinstance(sentence, Not):
@@ -128,6 +134,12 @@ def impl_free(sentence: Sentence) -> Sentence:
 
 
 def negative_normal_form(sentence: Sentence) -> Sentence:
+    """
+        This function has been implemented from the pseudocode given in
+        Huth, M., & Ryan, M. (2004). Propositional logic. In
+        Logic in Computer Science: Modelling and Reasoning about Systems (pp. 1-92).
+        Cambridge: Cambridge University Press.
+    """
     if isinstance(sentence, Atom):
         return sentence
     elif isinstance(sentence, Not):
@@ -150,6 +162,12 @@ def negative_normal_form(sentence: Sentence) -> Sentence:
 
 
 def distribute(s1: Sentence, s2: Sentence) -> Sentence:
+    """
+        This function has been implemented from the pseudocode given in
+        Huth, M., & Ryan, M. (2004). Propositional logic. In
+        Logic in Computer Science: Modelling and Reasoning about Systems (pp. 1-92).
+        Cambridge: Cambridge University Press.
+    """
     if isinstance(s1, And):
         return And(distribute(s1.left, s2), distribute(s1.right, s2))
     elif isinstance(s2, And):
@@ -159,6 +177,12 @@ def distribute(s1: Sentence, s2: Sentence) -> Sentence:
 
 
 def cnf(sentence: Sentence) -> Sentence:
+    """
+        This function has been implemented from the pseudocode given in
+        Huth, M., & Ryan, M. (2004). Propositional logic. In
+        Logic in Computer Science: Modelling and Reasoning about Systems (pp. 1-92).
+        Cambridge: Cambridge University Press.
+    """
     if isinstance(sentence, Atom):
         return sentence
     elif isinstance(sentence, Not) and isinstance(sentence.operand, Atom):
@@ -177,9 +201,7 @@ def convert_to_cnf(sentence: Sentence) -> Sentence:
     return cnf(nnf)
 
 
-def negate_sentence(sentence : Sentence) -> Sentence:
-    # Todo: Add method for negating a sentence.
-
+def negate_sentence(sentence: Sentence) -> Sentence:
     """
      Negates a sentence
 
@@ -207,7 +229,6 @@ def adds_sentence_to_belief_base(sentence: Sentence, belief_base: list) -> list:
     """
 
     new_belief_base = belief_base.append(sentence)
-
     return new_belief_base
 
 
