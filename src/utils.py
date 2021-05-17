@@ -26,15 +26,11 @@ def print_valid_syntax():
         # parser = Parser(sentence)
         parser = Parser(example6)
         sentence = parser.parse()
-        print(sentence.__class__)
         print(f"{example} is parsed as:", sentence)
         print(f" Sentence formula : {sentence.formula()}")
         print(f" CNF Form : {convert_to_cnf(sentence)}")
 
         # print(sentence.evaluate(model))
-
-
-print_valid_syntax()
 
 """
     p = Atom("P")
@@ -102,6 +98,14 @@ class display_utils:
         Displays the syntax information needed for running the program
         """
         print("Displays syntax accepted as an input")
+        print("Make sure to use proper bracket placement ( )")
+        print("|  Symbol  |   Operation   |")
+        print("| :-----:  |  :---------:  |")
+        print("|    &     |      AND      |")
+        print("|    |     |      OR       |")
+        print("|    ~     |      NOT      |")
+        print("|    =>    |    IMPLIES    |")
+        print("|   <=>    | BICONDITIONAL |")
 
 
     @staticmethod

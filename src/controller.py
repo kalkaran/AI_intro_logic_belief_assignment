@@ -153,25 +153,31 @@ class Controller:
         else:
             display_utils.print_entailment_invalid()
 
+    def show_examples(self):
+        print_valid_syntax()
+
+
     def print_valid_actions(self):
         print("\n--- List of actions ---")
         print("1: Print general menu")
         print("2: Print syntax information")
-        print("3: Print belief base")
-        print("4: Declare new belief base")
-        print("5: Use predefined belief base")
-        print("6: Add new belief to belief base")
-        print("7: Check if belief is entailed by the belief base")
+        print("3: Show Examples")
+        print("4: Print belief base")
+        print("5: Declare new belief base")
+        print("6: Use predefined belief base")
+        print("7: Add new belief to belief base")
+        print("8: Check if belief is entailed by the belief base")
 
     def preform_action(self, i):
         print("\n--- Actions information ---\n")
         switcher = {
             1: self.print_general_information,
             2: self.print_syntax_information,
-            3: self.print_current_belief_base,
-            4: self.declare_new_belief_base,
-            5: self.use_predefined_belief_base,
-            6: self.add_new_belief,
-            7: self.check_if_belief_is_entail_to_belief_base,
+            3: self.show_examples,
+            4: self.print_current_belief_base,
+            5: self.declare_new_belief_base,
+            6: self.use_predefined_belief_base,
+            7: self.add_new_belief,
+            8: self.check_if_belief_is_entail_to_belief_base,
         }
         switcher.get(i, lambda: print("Invalid input"))()
