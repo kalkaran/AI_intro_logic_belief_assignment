@@ -1,6 +1,6 @@
 from typing import List
 import pyparsing as p
-from src.logic import *
+from src.logic import Atom, Not, And, Or, Implies, BiConditional, Sentence
 from typing import List
 #from main import try_except
 import functools
