@@ -51,7 +51,10 @@ class Parser:
     @try_except
     def parse(self) -> Sentence:
         parsed_statement = self.expression.parseString(self.input_string)
-        return self.build_ast(parsed_statement.asList()[0])
+        print(parsed_statement)
+        ast = self.build_ast(parsed_statement.asList()[0])
+        print(ast)
+        return ast
 
     @try_except
     def build_ast(self, expr: List) -> Sentence:

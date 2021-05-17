@@ -14,7 +14,7 @@ The minimum required version of python is:
 ## Usage
 To run the code navigate to the `src/` directory in the terminal and run the following
 
-    python main.py
+    python3 main.py
 
 To run the tests run the following in the terminal from within the project directory
 
@@ -30,3 +30,5 @@ We have used the following symbols to represent propositional logic in our imple
 | `~`    | NOT             |
 | `=>`   | IMPLIES         |
 | `<=>`  | BICONDITIONAL   |
+
+

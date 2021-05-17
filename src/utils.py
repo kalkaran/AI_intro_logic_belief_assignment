@@ -6,7 +6,7 @@ example0 = '~(A & B) | (C & D)'
 # example000 = '~(A & B) | ((C & D) | A)'
 example1 = 'A & ~(B)'
 example2 = '~(A)'
-example3 = 'A & A & A'
+example3 = '(A & A) & A'
 example4 = 'A => B'
 example5 = 'A <=> B'
 example6 = '(A <=> B) => (B <=> A) & A | B'
@@ -24,14 +24,14 @@ def print_valid_syntax():
     for example in examples:
         # sentence = "(~(P) => (P | R))"
         # parser = Parser(sentence)
-        parser = Parser(example6)
+        parser = Parser(example)
         sentence = parser.parse()
         print(f"{example} is parsed as:", sentence)
         print(f" Sentence formula : {sentence.formula()}")
         print(f" CNF Form : {convert_to_cnf(sentence)}")
 
         # print(sentence.evaluate(model))
-
+print_valid_syntax()
 """
     p = Atom("P")
     q = Atom("A")
@@ -98,7 +98,8 @@ class display_utils:
         Displays the syntax information needed for running the program
         """
         print("Displays syntax accepted as an input")
-        print("Make sure to use proper bracket placement ( )")
+        print("Please surround your input with ( )")
+        print("Make sure to use proper bracket placement")
         print("|  Symbol  |   Operation   |")
         print("| :-----:  |  :---------:  |")
         print("|    &     |      AND      |")

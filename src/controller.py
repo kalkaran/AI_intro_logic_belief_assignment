@@ -35,6 +35,7 @@ class Controller:
         Calls a print_syntax_information method in display_utils class, which prints the syntax
         information needed for running the program.
         """
+
         display_utils.print_syntax_information()
 
     def print_current_belief_base(self):
@@ -58,18 +59,16 @@ class Controller:
         """
         # Step 1
         sentence = input("Belief base: ")
-
+        print("input is ", sentence)
         # Step 2
-        if not validator.syntax_is_valid(sentence):
-            display_utils.print_invalid_input_information()
-            return
 
-        # Step 3
-        if not self.agent.check_satisfiability_of_sentence(sentence):
-            display_utils.print_unsatisfiability_information()
-            return
+        # # Step 3
+        # if not self.agent.check_satisfiability_of_sentence(sentence):
+        #     display_utils.print_unsatisfiability_information()
+        #     return
 
         # Step 4
+        print("controler agent. new base")
         self.agent.declare_new_belief_base(sentence)
         display_utils.print_successful_declaration_of_belief_base()
 

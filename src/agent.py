@@ -35,10 +35,9 @@ class Agent:
         """
             Prints the current belief base.
         """
-        print(f"Before: {self.belief_base}")
+        print(f"The belief base contains {self.belief_base}")
 
     def declare_new_belief_base(self, sentence: str):
-        # Todo: Add method for declaring new belief base
 
         """
         Contains functionality for declaring a new belief base.
@@ -54,8 +53,10 @@ class Agent:
         """
 
         # Step 1: The sentence is parsed and an abstract syntax tree is created.
+        # print(f"Before: {sentence}")
         sentence = Parser(sentence).parse()
-        print(f"Before: {sentence}")
+        # print("after parsing ", sentence)
+
 
         # Step 2: The abstract syntax tree is converted to CNF
         CNF = convert_to_cnf(sentence)
@@ -74,7 +75,6 @@ class Agent:
         self.defined_belief_base = True
 
     def add_new_belief_to_belief_base(self, sentence: str):
-        # Todo: Add method for adding new belief to belief base
 
         """
         Contains functionality for adding a new belief to the belief base.
@@ -126,7 +126,6 @@ class Agent:
         Step 8: If there exit a model for which the sentence is true, True is returned otherwise false.
 
         """
-
         # The sentence is parsed and an abstract syntax tree is created.
         sentence = Parser(sentence).parse()
         print(f"Before: {sentence}")

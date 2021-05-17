@@ -332,14 +332,9 @@ def associate(connective, sentences):
     """
     >>> associate(And, [Atom("p"), Atom("q"), Atom("r")])
     ((p ∧ q) ∧ r)
-    >>> associate(Or, [Atom("p"), Atom("q"), Atom("r")])
+    >>> associate(Or, [Atom("p")]) # , Atom("q"), Atom("r")])
     ((p ∨ q) ∨ r)
-    >>> associate(Or, []) # , Atom("q"), Atom("r")])
-
     """
-
-    if len(sentences) < 2 and not sentences == []:
-        return sentences[0]
     return functools.reduce(lambda left, right: connective(left, right), sentences)
 
 
@@ -352,8 +347,6 @@ class BeliefBase(object):
             self.beliefs.append(sentence)
 
     def belief_base_as_conjuncts(self):
-        if not self.beliefs:
-            return self.beliefs
         return associate(And, self.beliefs)
 
     def delete_belief(self, sentence_to_delete: Sentence):
