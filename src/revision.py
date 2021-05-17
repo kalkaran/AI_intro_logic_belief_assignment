@@ -11,10 +11,10 @@ class revisor:
         sentence = parser.parse()
         print(f"{belief} is parsed as:", sentence)
         print(f" Sentence formula : {sentence.formula()}")
-        print(f" CNF Form : {convert_to_cnf(sentence.formula())}")
+        print(f" CNF Form : {convert_to_cnf(sentence)}")
         self.belief = belief
         self.sentence = sentence
-        self.cnf = convert_to_cnf(sentence.formula())
+        self.cnf = convert_to_cnf(sentence)
 
 
     #TODO test negative normal form.
@@ -42,7 +42,6 @@ class revisor:
             return True
         else:
             return False
-
 
 
     def expand(self, expansion_belief):

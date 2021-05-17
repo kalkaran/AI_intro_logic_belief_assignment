@@ -2,7 +2,7 @@ from typing import List
 import pyparsing as p
 from src.logic import Atom, Not, And, Or, Implies, BiConditional, Sentence
 from typing import List
-#from main import try_except
+# from main import try_except
 import functools
 
 
@@ -14,8 +14,8 @@ def try_except(f):
         except Exception as ex:
             print(f.__name__)
             print(ex)
-    return inner
 
+    return inner
 
 
 class Parser:
@@ -34,19 +34,19 @@ class Parser:
 
         self.expression = p.infixNotation(
             self.ATOM,
-                [ (self.NOT_TOKEN, 1, p.opAssoc.RIGHT)
+            [(self.NOT_TOKEN, 1, p.opAssoc.RIGHT)
                 , (self.AND_TOKEN, 2, p.opAssoc.LEFT)
-                , (self.OR_TOKEN,  2, p.opAssoc.LEFT)
+                , (self.OR_TOKEN, 2, p.opAssoc.LEFT)
                 , (self.IMPLIES_TOKEN, 2, p.opAssoc.RIGHT)
                 , (self.BICOND_TOKEN, 2, p.opAssoc.RIGHT)
-                ]
-            )
+             ]
+        )
 
-        self.operators = { '&' : And
-                         , '|' : Or
-                         , '=>': Implies
-                         , '<=>': BiConditional
-                         , '~' : Not}
+        self.operators = {'&': And
+            , '|': Or
+            , '=>': Implies
+            , '<=>': BiConditional
+            , '~': Not}
 
     @try_except
     def parse(self) -> Sentence:
@@ -72,12 +72,3 @@ class Parser:
                 op, right_tree = expr
                 connective = self.operators[op]
                 return connective(self.build_ast(right_tree))
-
-
-
-
-
-
-
-
-

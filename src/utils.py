@@ -1,9 +1,9 @@
-from logic import *
-from parser import Parser
+from src.logic import *
+from src.parser import Parser
 
-example0 = '~(A & B) | ((C & D))'
-example0 = '~(A & B) | ((C & D) | E)'  # <- this doesn't work @Ayman looks like only 4 letters allowed :/
-example0 = '~(A & B) | ((C & D) | A)'
+example0 = '~(A & B) | (C & D)'
+# example00 = '~(A & B) | ((C & D) | E)'  # <- this doesn't work @Ayman looks like only 4 letters allowed :/
+# example000 = '~(A & B) | ((C & D) | A)'
 example1 = 'A & ~(B)'
 example2 = '~(A)'
 example3 = 'A & A & A'
@@ -11,7 +11,7 @@ example4 = 'A => B'
 example5 = 'A <=> B'
 example6 = '(A <=> B) => (B <=> A) & A | B'
 
-examples = [example0
+examples = [example1
     , example1
     , example2
     , example3
@@ -20,21 +20,21 @@ examples = [example0
     , example6]
 
 
-def printValidSyntax():
+def print_valid_syntax():
     for example in examples:
         # sentence = "(~(P) => (P | R))"
         # parser = Parser(sentence)
-        parser = Parser(example)
+        parser = Parser(example6)
         sentence = parser.parse()
-
+        print(sentence.__class__)
         print(f"{example} is parsed as:", sentence)
         print(f" Sentence formula : {sentence.formula()}")
-        print(f" CNF Form : {convert_to_cnf(sentence.formula())}")
+        print(f" CNF Form : {convert_to_cnf(sentence)}")
 
         # print(sentence.evaluate(model))
 
 
-printValidSyntax()
+print_valid_syntax()
 
 """
     p = Atom("P")
@@ -49,10 +49,11 @@ printValidSyntax()
     print(sentence.evaluate(model))
     """
 
+
 class validator:
 
     @staticmethod
-    def syntax_is_valid(sentence:str):
+    def syntax_is_valid(sentence: str):
         # Todo: Add method for checking if a user input is valid syntax
         """
         Check if a user input containing propositional logic in symbolic form is valid or not
@@ -66,7 +67,6 @@ class validator:
             - If the input is valid base on the syntax used in the program true is returned otherwise false.
         """
         return True
-
 
 
 class display_utils:

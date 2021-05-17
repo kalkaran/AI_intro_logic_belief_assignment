@@ -2,7 +2,6 @@ from src.utils import *
 from src.agent import *
 
 
-
 class Controller:
     """
     The controller class handles the flow of the program
@@ -19,7 +18,6 @@ class Controller:
         while True:
             self.print_valid_actions()
             self.preform_action(int(input("Select actions: ")))
-
 
     def print_general_information(self):
         """
@@ -74,7 +72,6 @@ class Controller:
         # Step 4
         self.agent.declare_new_belief_base(sentence)
         display_utils.print_successful_declaration_of_belief_base()
-
 
     def use_predefined_belief_base(self):
         """
@@ -156,7 +153,6 @@ class Controller:
         else:
             display_utils.print_entailment_invalid()
 
-
     def print_valid_actions(self):
         print("\n--- List of actions ---")
         print("1: Print general information")
@@ -165,7 +161,7 @@ class Controller:
         print("4: Declare new belief base")
         print("5: Use predefined belief base")
         print("6: Add new belief to belief base")
-        print("7: Check if belief is entail by the belief base")
+        print("7: Check if belief is entailed by the belief base")
 
     def preform_action(self, i):
         print("\n--- Actions information ---\n")

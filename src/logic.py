@@ -1,6 +1,5 @@
 import functools
 from abc import ABC
-from action import *
 from typing import Dict, List
 
 
@@ -104,7 +103,7 @@ class BiConditional(Sentence):
         return ((not self.left.evaluate(model)) or self.right.evaluate(model)) and (
                 (not self.right.evaluate(model)) or self.left.evaluate(model))
 
-    def belief_list(self) -> str:
+    def formula(self) -> str:
         return f"(~{self.left.formula()} | {self.right.formula()}) & (~{self.right.formula()} | {self.left.formula()})"
 
     def __repr__(self) -> str:
@@ -113,7 +112,36 @@ class BiConditional(Sentence):
 
 ################ Static Methods Below ####################
 
-def impl_free(sentence: Sentence) -> Sentence:
+# def eliminate_implications(sentence: Sentence) -> Sentence:
+#     """"""
+#     """
+#         This function has been implemented from the pseudocode given in
+#         Huth, M., & Ryan, M. (2004). Propositional logic. In
+#         Logic in Computer Science: Modelling and Reasoning about Systems (pp. 1-92).
+#         Cambridge: Cambridge University Press.
+#     """
+#     if isinstance(sentence, Atom):
+#     if ((str(type(sentence))) == "<class 'src.logic.Atom'>"):
+#         return sentence
+#     elif isinstance(sentence, Not):
+#     elif ((str(type(sentence))) == "<class 'src.logic.Not'>"):
+#         return Not(eliminate_implications(sentence.operand))
+#     elif isinstance(sentence, And):
+#     elif ((str(type(sentence))) == "<class 'src.logic.And'>"):
+#         return And(eliminate_implications(sentence.left), eliminate_implications(sentence.right))
+#     elif isinstance(sentence, Or):
+#     elif ((str(type(sentence))) == "<class 'src.logic.Or'>"):
+#         return Or(eliminate_implications(sentence.left), eliminate_implications(sentence.right))
+#     elif isinstance(sentence, Implies):
+#     elif ((str(type(sentence))) == "<class 'src.logic.Implies4'>"):
+#         return Or(Not(eliminate_implications(sentence.left)), eliminate_implications(sentence.right))
+#     elif isinstance(sentence, BiConditional):
+#         return eliminate_implications(And(Or(Not(sentence.left), sentence.right), Or(Not(sentence.right), sentence.left)))
+#     else:
+#         print(type(sentence))
+#         raise ValueError("The given input is not a valid propositional sentence.")
+
+def eliminate_implications(sentence: Sentence) -> Sentence:
     """"""
     """
         This function has been implemented from the pseudocode given in
@@ -121,18 +149,19 @@ def impl_free(sentence: Sentence) -> Sentence:
         Logic in Computer Science: Modelling and Reasoning about Systems (pp. 1-92).
         Cambridge: Cambridge University Press.
     """
+    # print("Implication elimination:", sentence.__class__, type(sentence), isinstance(sentence, Implies))
     if isinstance(sentence, Atom):
         return sentence
     elif isinstance(sentence, Not):
-        return Not(impl_free(sentence.operand))
+        return Not(eliminate_implications(sentence.operand))
     elif isinstance(sentence, And):
-        return And(impl_free(sentence.left), impl_free(sentence.right))
+        return And(eliminate_implications(sentence.left), eliminate_implications(sentence.right))
     elif isinstance(sentence, Or):
-        return Or(impl_free(sentence.left), impl_free(sentence.right))
+        return Or(eliminate_implications(sentence.left), eliminate_implications(sentence.right))
     elif isinstance(sentence, Implies):
-        return Or(Not(impl_free(sentence.left)), impl_free(sentence.right))
+        return Or(Not(eliminate_implications(sentence.left)), eliminate_implications(sentence.right))
     elif isinstance(sentence, BiConditional):
-        return impl_free(And(Or(Not(sentence.left), sentence.right), Or(Not(sentence.right), sentence.left)))
+        return eliminate_implications(And(Or(Not(sentence.left), sentence.right), Or(Not(sentence.right), sentence.left)))
     else:
         raise ValueError("The given input is not a valid propositional sentence.")
 
@@ -183,7 +212,7 @@ def distribute(s1: Sentence, s2: Sentence) -> Sentence:
 
 
 
-def cnf(sentence: Sentence) -> Sentence:
+def cnf_converter(sentence: Sentence) -> Sentence:
     """"""
     """
         This function has been implemented from the pseudocode given in
@@ -196,51 +225,20 @@ def cnf(sentence: Sentence) -> Sentence:
     elif isinstance(sentence, Not) and isinstance(sentence.operand, Atom):
         return sentence
     elif isinstance(sentence, And):
-        return And(cnf(sentence.left), cnf(sentence.right))
+        return And(cnf_converter(sentence.left), cnf_converter(sentence.right))
     elif isinstance(sentence, Or):
-        return distribute(cnf(sentence.left), cnf(sentence.right))
+        return distribute(cnf_converter(sentence.left), cnf_converter(sentence.right))
     else:
         raise ValueError("Invalid input sentence.")
 
 
 def convert_to_cnf(sentence: Sentence) -> Sentence:
-    imp_free = impl_free(sentence)
+    imp_free = eliminate_implications(sentence)
     nnf = negative_normal_form(imp_free)
-    return cnf(nnf)
+    return cnf_converter(nnf)
 
 
-def negate_sentence(sentence: Sentence) -> Sentence:
-    """
-     Negates a sentence
-
-    Parameters:
-        sentence (Sentence): Takes a sentence which has been converted to CNF.
-
-    #Returns:
-        negation (Sentence): Returns the negation of the sentence
-    """
-
-    return Not(sentence)
-
-
-def adds_sentence_to_belief_base(sentence: Sentence, belief_base: list) -> list:
-    # Todo: Add method for adding a sentence/belief to a belief base
-
-    """
-     Adds s sentence/belief to a belief base.
-
-    Parameters:
-        sentence (Sentence): Takes a sentence which has been converted to CNF.
-        belief_base (List): Takes a list of beliefs.
-    #Returns:
-        list(Sentence): The returns a list of all beliefs, where the sentence has been added.
-    """
-
-    new_belief_base = belief_base.append(sentence)
-    return new_belief_base
-
-
-def collect_conjuncts(sentence: Sentence) -> list:
+def collect_clauses(sentence: Sentence) -> list:
     # Todo: Add method for splitting a sentence into a list of beliefs
 
     """
@@ -254,7 +252,7 @@ def collect_conjuncts(sentence: Sentence) -> list:
         list(Sentence): It returns a list of all beliefs in the sentence, when divided by each "and"
     """
     if isinstance(sentence, And):
-        return collect_conjuncts(sentence.left) + collect_conjuncts(sentence.right)
+        return collect_clauses(sentence.left) + collect_clauses(sentence.right)
     else:
         return [sentence]
 
@@ -280,8 +278,18 @@ def remove_redundant_beliefs(belief_list: list):
 
 
 def collect_atoms(sentence: Sentence):
-    # Todo: Add method for creating all possible models based on a list of atoms.
+    """
+    """
+    if isinstance(sentence, Atom):
+        return {sentence.name}
+    elif isinstance(sentence, Not):
+        return collect_atoms(sentence.operand)
+    elif isinstance(sentence, And) or isinstance(sentence, Or) \
+            or isinstance(sentence, Implies) or isinstance(sentence, BiConditional):
+        return set.union(collect_atoms(sentence.left), collect_atoms(sentence.right))
 
+
+def tt_check_all(belief_sentence: Sentence, sentence: Sentence, atoms, model):
     """
      Creates a list of models based on the atoms that exits in the belief base.
 
@@ -299,24 +307,12 @@ def collect_atoms(sentence: Sentence):
      model = {"P": False, "Q": False, "R": True}
      model = {"P": False, "Q": True, "R": False}
 
-    Parameters:
-        atom_list (list): Takes a list of atoms.
-
-    #Returns:
-        list(Models): The returns a list of Models
-        :param sentence:
+    :param belief_sentence:
+    :param sentence:
+    :param atoms:
+    :param model:
+    :return:
     """
-    list_of_atoms = []
-
-    if isinstance(sentence, Atom):
-        return {sentence.name}
-    elif isinstance(sentence, Not):
-        return set.union(collect_atoms(sentence.operand))
-    else:
-        return set.union(collect_atoms(sentence.left), collect_atoms(sentence.right))
-
-
-def check_all(belief_sentence: Sentence, sentence: Sentence, atoms, model):
     if not atoms:
         if belief_sentence.evaluate(model):
             return sentence.evaluate(model)
@@ -335,13 +331,11 @@ def check_all(belief_sentence: Sentence, sentence: Sentence, atoms, model):
         false_in_model = {atom: False}
         false_model.update(false_in_model)
 
-        return check_all(belief_sentence, sentence, current_atoms, true_model) \
-               and check_all(belief_sentence, sentence, current_atoms, false_model)
+        return tt_check_all(belief_sentence, sentence, current_atoms, true_model) \
+               and tt_check_all(belief_sentence, sentence, current_atoms, false_model)
 
 
-def model_checking(belief: Sentence, query: Sentence) -> bool:
-    # Todo: Add method for preforming model checking
-
+def tt_entails(belief: Sentence, query: Sentence) -> bool:
     """
     Check if there exits a model for which the belief list is true.
     - Loops through the models and check if the model makes the belief list true.
@@ -357,28 +351,28 @@ def model_checking(belief: Sentence, query: Sentence) -> bool:
     """
 
     atoms = set.union(collect_atoms(query), collect_atoms(belief))
-    return check_all(belief, query, atoms, dict())
+    return tt_check_all(belief, query, atoms, dict())
 
 
-def find_all_atoms_in_belief_base(belief_list: list):
-    # Todo: Add method for removing redundant beliefs from a list of beliefs
-
-    """
-     Loops through the belief list, finds all atoms and adds them to a list
-
-    Parameters:
-        belief_list (list): Takes a list of sentences representing the belief base
-
-    #Returns:
-        list(Atom): It returns a list of all atoms in the belief list.
-    """
-    list_of_atoms = []
-
-    # --- Implement code here---
-
-    # ---------------------------
-
-    return list_of_atoms
+# def find_all_atoms_in_belief_base(belief_list: list):
+#     # Todo: Add method for removing redundant beliefs from a list of beliefs
+#
+#     """
+#      Loops through the belief list, finds all atoms and adds them to a list
+#
+#     Parameters:
+#         belief_list (list): Takes a list of sentences representing the belief base
+#
+#     #Returns:
+#         list(Atom): It returns a list of all atoms in the belief list.
+#     """
+#     list_of_atoms = []
+#
+#     # --- Implement code here---
+#
+#     # ---------------------------
+#
+#     return list_of_atoms
 
 
 def collect_disjuncts(sentence: Sentence) -> List:
@@ -457,10 +451,10 @@ def check_for_entailment(belief_base: list):
 
     # ---------------------------
 
-    return Action.revision
+    return
 
 
-def revise_belief_base(belief_base: list, action: Action, belief: Sentence):
+def revise_belief_base(belief_base: list, action, belief: Sentence):
     # Todo: Add a method for revision of a belief base.
 
     """
@@ -494,7 +488,7 @@ class BeliefBase(object):
         self.beliefs = []
 
     def add_belief(self, sentence: Sentence) -> None:
-        if model_checking(self.belief_base_as_conjuncts(), sentence):
+        if tt_entails(self.belief_base_as_conjuncts(), sentence):
             self.beliefs.append(sentence)
 
     def belief_base_as_conjuncts(self):
@@ -506,8 +500,6 @@ class BeliefBase(object):
 
     def reset_belief_base(self):
         self.beliefs.clear()
-
-
 
 
 if __name__ == "__main__":
