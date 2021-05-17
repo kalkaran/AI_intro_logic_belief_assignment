@@ -29,7 +29,7 @@ class Agent:
     which is converted into CNF form and saved as a list of clauses. 
     Given (P => Q & Z) converted to CNF (~P | Q & Z) and then into a list of clauses [~P | Q, Z]       
     """
-    belief_base = []
+    belief_base = BeliefBase()
 
     def print_belief_base(self):
         """
@@ -70,7 +70,7 @@ class Agent:
         print(f"Filtered List: {list_of_clauses_filtered}")
 
         # Step 5: The belief base is declared and defined_belief_base is change to true.
-        self.belief_base = list_of_clauses_filtered
+        self.belief_base.add_belief(list_of_clauses_filtered)
         self.defined_belief_base = True
 
     def add_new_belief_to_belief_base(self, sentence: str):
@@ -106,11 +106,12 @@ class Agent:
         print(f"Negated: {negation}")
 
         # Step 4: The negated sentence is added to a copy of the belief base
-        temp_belief_base = adds_sentence_to_belief_base(negation, self.belief_base)
-        print(f"Temp belief base: {temp_belief_base}")
+        # temp_belief_base = adds_sentence_to_belief_base(negation, self.belief_base)
+        self.belief_base.add_belief(negation)
+        print(f"Temp belief base: {self.belief_base}")
 
         # Step 5: Check for logical entailment of added belief with resolution.
-        action = check_for_entailment(temp_belief_base)
+        # action = check_for_entailment(temp_belief_base)
 
         # Step 6: Preform a revision of the belief base, if its required.
         revised_belief_base = revise_belief_base(action, self.belief_base, sentence)

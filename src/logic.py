@@ -1,6 +1,7 @@
+import functools
 from abc import ABC
 from action import *
-from typing import Dict
+from typing import Dict, List
 
 
 # import src.parser as P
@@ -373,6 +374,59 @@ def find_all_atoms_in_belief_base(belief_list: list):
     return list_of_atoms
 
 
+def collect_disjuncts(sentence: Sentence) -> List:
+    """
+    >>> collect_disjuncts(Or(Atom("p"), Or(Atom("q"), And(Atom("q"), Atom("r")))))
+    [p, q, (q ∧ r)]
+    """
+    if isinstance(sentence, Or):
+        return collect_disjuncts(sentence.left) + collect_disjuncts(sentence.right)
+    else:
+        return [sentence]
+
+
+def associate(connective, sentences):
+    """
+    >>> associate(And, [Atom("p"), Atom("q"), Atom("r")])
+    ((p ∧ q) ∧ r)
+    >>> associate(Or, [Atom("p"), Atom("q"), Atom("r")])
+    ((p ∨ q) ∨ r)
+    """
+    return functools.reduce(lambda left, right: connective(left, right), sentences)
+
+
+# def pl_resolve(ci, cj):
+#     clauses = []
+#     for disjunct_i in collect_disjuncts(ci):
+#         for disjunct_j in collect_disjuncts(cj):
+#             if model_checking(disjunct_i, Not(disjunct_j)) or model_checking(Not(disjunct_i), disjunct_j):
+#                 clauses.append(associate(Or, ))
+#
+# def pl_resolution(belief_base: List[Sentence], query: Sentence):
+#     query_to_cnf = convert_to_cnf(Not(query))
+#     clauses = belief_base + collect_conjuncts(query_to_cnf)
+#     new = set()
+#     N = len(clauses)
+#     pairs_of_clauses = [(clauses[i], clauses[j]) for i in range(N) for j in range(i + 1, N)]
+#     for (ci, cj) in pairs_of_clauses:
+#         resolvents = pl_resolve(ci, cj)
+#         if False in resolvents:
+#             return True
+#         new = new.unio(set(resolvents))
+#     if new.issubset(set(clauses)):
+#         return False
+#     for c in new:
+#         if c not in clauses:
+#             clauses.append(c)
+
+def find_pure_symbol(atoms: List[Sentence], clauses: List[Sentence]):
+    """
+    >>> find_pure_symbol([Atom("p"), Atom("q"), Atom("r")], [Or(Atom("p"), Not(Atom("q"))), Or(Atom("q"), Atom("r"))])
+    [p, r]
+    """
+    pass
+
+
 def check_for_entailment(belief_base: list):
     # Todo: Add a method for checking for entailment in a belief base
 
@@ -428,5 +482,28 @@ def revise_belief_base(belief_base: list, action: Action, belief: Sentence):
     return revised_belief_base
 
 
-class BeliefBase():
-    pass
+class BeliefBase(object):
+    def __init__(self):
+        self.beliefs = []
+
+    def add_belief(self, sentence: Sentence) -> None:
+        if model_checking(self.belief_base_as_conjuncts(), sentence):
+            self.beliefs.append(sentence)
+
+    def belief_base_as_conjuncts(self):
+        return associate(And, self.beliefs)
+
+    def delete_belief(self, sentence_to_delete: Sentence):
+        if sentence_to_delete in self.beliefs:
+            self.beliefs.remove(sentence_to_delete)
+
+    def reset_belief_base(self):
+        self.beliefs.clear()
+
+
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
