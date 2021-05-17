@@ -93,7 +93,7 @@ class display_utils:
         """
         Displays the general information needed for running the program
         """
-        print("Displays general information")
+        print("Displays general menu")
 
     @staticmethod
     def print_syntax_information():
@@ -102,6 +102,7 @@ class display_utils:
         Displays the syntax information needed for running the program
         """
         print("Displays syntax accepted as an input")
+
 
     @staticmethod
     def print_invalid_input_information():

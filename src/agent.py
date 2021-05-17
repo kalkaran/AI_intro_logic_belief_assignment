@@ -143,7 +143,7 @@ class Agent:
         list_of_beliefs_filtered = remove_redundant_beliefs(list_of_beliefs)
         print(f"Filtered List: {list_of_beliefs_filtered}")
 
-        query = associate(And, CNF)
+        query = associate(And, collect_clauses(CNF))
 
         is_entailed = tt_entails(self.belief_base.belief_base_as_conjuncts(), query)
 

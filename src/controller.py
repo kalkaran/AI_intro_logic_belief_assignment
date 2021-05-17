@@ -155,7 +155,7 @@ class Controller:
 
     def print_valid_actions(self):
         print("\n--- List of actions ---")
-        print("1: Print general information")
+        print("1: Print general menu")
         print("2: Print syntax information")
         print("3: Print belief base")
         print("4: Declare new belief base")

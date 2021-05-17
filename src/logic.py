@@ -2,10 +2,6 @@ import functools
 from abc import ABC
 from typing import Dict, List
 
-
-# import src.parser as P
-
-
 class Sentence(ABC):
     def evaluate(self, model: Dict[str, bool]) -> bool:
         """ evaluates the truth of a sentence with respect to a particular model """
@@ -108,38 +104,6 @@ class BiConditional(Sentence):
 
     def __repr__(self) -> str:
         return f"({self.left.__repr__()} <=> {self.right.__repr__()})"
-
-
-################ Static Methods Below ####################
-
-# def eliminate_implications(sentence: Sentence) -> Sentence:
-#     """"""
-#     """
-#         This function has been implemented from the pseudocode given in
-#         Huth, M., & Ryan, M. (2004). Propositional logic. In
-#         Logic in Computer Science: Modelling and Reasoning about Systems (pp. 1-92).
-#         Cambridge: Cambridge University Press.
-#     """
-#     if isinstance(sentence, Atom):
-#     if ((str(type(sentence))) == "<class 'src.logic.Atom'>"):
-#         return sentence
-#     elif isinstance(sentence, Not):
-#     elif ((str(type(sentence))) == "<class 'src.logic.Not'>"):
-#         return Not(eliminate_implications(sentence.operand))
-#     elif isinstance(sentence, And):
-#     elif ((str(type(sentence))) == "<class 'src.logic.And'>"):
-#         return And(eliminate_implications(sentence.left), eliminate_implications(sentence.right))
-#     elif isinstance(sentence, Or):
-#     elif ((str(type(sentence))) == "<class 'src.logic.Or'>"):
-#         return Or(eliminate_implications(sentence.left), eliminate_implications(sentence.right))
-#     elif isinstance(sentence, Implies):
-#     elif ((str(type(sentence))) == "<class 'src.logic.Implies4'>"):
-#         return Or(Not(eliminate_implications(sentence.left)), eliminate_implications(sentence.right))
-#     elif isinstance(sentence, BiConditional):
-#         return eliminate_implications(And(Or(Not(sentence.left), sentence.right), Or(Not(sentence.right), sentence.left)))
-#     else:
-#         print(type(sentence))
-#         raise ValueError("The given input is not a valid propositional sentence.")
 
 def eliminate_implications(sentence: Sentence) -> Sentence:
     """"""
@@ -353,28 +317,6 @@ def tt_entails(belief: Sentence, query: Sentence) -> bool:
     atoms = set.union(collect_atoms(query), collect_atoms(belief))
     return tt_check_all(belief, query, atoms, dict())
 
-
-# def find_all_atoms_in_belief_base(belief_list: list):
-#     # Todo: Add method for removing redundant beliefs from a list of beliefs
-#
-#     """
-#      Loops through the belief list, finds all atoms and adds them to a list
-#
-#     Parameters:
-#         belief_list (list): Takes a list of sentences representing the belief base
-#
-#     #Returns:
-#         list(Atom): It returns a list of all atoms in the belief list.
-#     """
-#     list_of_atoms = []
-#
-#     # --- Implement code here---
-#
-#     # ---------------------------
-#
-#     return list_of_atoms
-
-
 def collect_disjuncts(sentence: Sentence) -> List:
     """
     >>> collect_disjuncts(Or(Atom("p"), Or(Atom("q"), And(Atom("q"), Atom("r")))))
@@ -396,93 +338,6 @@ def associate(connective, sentences):
     return functools.reduce(lambda left, right: connective(left, right), sentences)
 
 
-# def pl_resolve(ci, cj):
-#     clauses = []
-#     for disjunct_i in collect_disjuncts(ci):
-#         for disjunct_j in collect_disjuncts(cj):
-#             if model_checking(disjunct_i, Not(disjunct_j)) or model_checking(Not(disjunct_i), disjunct_j):
-#                 clauses.append(associate(Or, ))
-#
-# def pl_resolution(belief_base: List[Sentence], query: Sentence):
-#     query_to_cnf = convert_to_cnf(Not(query))
-#     clauses = belief_base + collect_conjuncts(query_to_cnf)
-#     new = set()
-#     N = len(clauses)
-#     pairs_of_clauses = [(clauses[i], clauses[j]) for i in range(N) for j in range(i + 1, N)]
-#     for (ci, cj) in pairs_of_clauses:
-#         resolvents = pl_resolve(ci, cj)
-#         if False in resolvents:
-#             return True
-#         new = new.unio(set(resolvents))
-#     if new.issubset(set(clauses)):
-#         return False
-#     for c in new:
-#         if c not in clauses:
-#             clauses.append(c)
-
-def find_pure_symbol(atoms: List[Sentence], clauses: List[Sentence]):
-    """
-    >>> find_pure_symbol([Atom("p"), Atom("q"), Atom("r")], [Or(Atom("p"), Not(Atom("q"))), Or(Atom("q"), Atom("r"))])
-    [p, r]
-    """
-    pass
-
-
-def check_for_entailment(belief_base: list):
-    # Todo: Add a method for checking for entailment in a belief base
-
-    """
-     Checking for entailment in a belief base.
-     - It done by preforming resolution on the belief base.
-     - When preforming resolution it checks if two clauses can be resolved to an empty clause,
-      when added the negation of a belief to the belief base.
-      If this is true, it indicating that the belief is entailed by the belief base.
-    - If the belief is entailed by the belief base, revision of the belief base must be preformed.
-    - If the belief is not entailed by the belief base, it can just be added to the belief base.
-
-    Parameters:
-        belief_base(list): Takes a belief base, where a negated belief has been added to it.
-
-    #Returns:
-        action: Return an action based on the result of the check.
-    """
-
-    # --- Implement code here---
-
-    # ---------------------------
-
-    return
-
-
-def revise_belief_base(belief_base: list, action, belief: Sentence):
-    # Todo: Add a method for revision of a belief base.
-
-    """
-     Preforms a revision of a belief base.
-     - The revision of a belief base is done with the intend to keeps as must information as possible.
-     - Different techniques can be used, but their all build on the idea of reminder set
-     - Look at Maxichoice Contraction,  Full-Meet Contraction and Partial-Meet Contraction
-     - If the belief is not entailed by the belief base, it can just be added to the belief base.
-
-    Parameters:
-        belief_base(list): The current belief base.
-        action (Action): An action base on the entailment check of the belief base,
-                        where a negated belief was added to it.
-        belief (Sentence): The belief that should be added to the belief base.
-
-    #Returns:
-        list : Returns a revised list of beliefs as the new belief base.
-    """
-
-    revised_belief_base = belief_base
-
-    # --- Implement code here---
-
-    # ---------------------------
-
-    return revised_belief_base
-
-
 class BeliefBase(object):
     def __init__(self):
         self.beliefs = []
@@ -501,6 +356,8 @@ class BeliefBase(object):
     def reset_belief_base(self):
         self.beliefs.clear()
 
+    def __str__(self):
+        return "{" + ", ".join(self.beliefs) + "}"
 
 if __name__ == "__main__":
     import doctest
