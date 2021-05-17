@@ -56,14 +56,10 @@ class Parser:
     @try_except
     def build_ast(self, expr: List) -> Sentence:
         """ This function builds an abstract syntax tree from the parsed input.
-
             Parameters:
-                    expr (List): A ParseResult from pyparsing.parseString
-                               converted to a list of lists.
-
+            expr (List): A ParseResult from pyparsing.parseString converted to a list of lists.
             Returns:
-                    ast (Sentence): The corresponding abstract syntax tree (ast) of the parsed
-                                      input.
+            ast (Sentence): The corresponding abstract syntax tree (ast) of the parsed input.
         """
         if not isinstance(expr, List):
             return Atom(expr)

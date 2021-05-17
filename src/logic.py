@@ -110,7 +110,10 @@ class BiConditional(Sentence):
         return f"({self.left.__repr__()} <=> {self.right.__repr__()})"
 
 
+################ Static Methods Below ####################
+
 def impl_free(sentence: Sentence) -> Sentence:
+    """"""
     """
         This function has been implemented from the pseudocode given in
         Huth, M., & Ryan, M. (2004). Propositional logic. In
@@ -134,6 +137,7 @@ def impl_free(sentence: Sentence) -> Sentence:
 
 
 def negative_normal_form(sentence: Sentence) -> Sentence:
+    """"""
     """
         This function has been implemented from the pseudocode given in
         Huth, M., & Ryan, M. (2004). Propositional logic. In
@@ -162,6 +166,7 @@ def negative_normal_form(sentence: Sentence) -> Sentence:
 
 
 def distribute(s1: Sentence, s2: Sentence) -> Sentence:
+    """"""
     """
         This function has been implemented from the pseudocode given in
         Huth, M., & Ryan, M. (2004). Propositional logic. In
@@ -176,7 +181,9 @@ def distribute(s1: Sentence, s2: Sentence) -> Sentence:
         return Or(s1, s2)
 
 
+
 def cnf(sentence: Sentence) -> Sentence:
+    """"""
     """
         This function has been implemented from the pseudocode given in
         Huth, M., & Ryan, M. (2004). Propositional logic. In

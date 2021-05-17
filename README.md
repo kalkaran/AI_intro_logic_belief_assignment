@@ -20,3 +20,13 @@ To run the tests run the following in the terminal from within the project direc
 
     pytest
 
+### Propositional Logic Symbols
+We have used the following symbols to represent propositional logic in our implementation of a belief revision engine:
+
+| Symbol | Operation       |
+|:------:|:----------------|
+| `&`    | AND             |
+| <code>&#124;</code> | OR |
+| `~`    | NOT             |
+| `=>`   | IMPLIES         |
+| `<=>`  | BICONDITIONAL   |
